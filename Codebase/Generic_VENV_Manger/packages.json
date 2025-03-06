@@ -1,5 +1,8 @@
 {
   "pip_packages": [
-    "pandas"
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "scipy"
   ]
 }
