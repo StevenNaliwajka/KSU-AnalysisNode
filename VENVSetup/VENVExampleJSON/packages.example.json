@@ -1,0 +1,10 @@
+{
+  "pip_packages": [
+    "ex1",
+    "ex2"
+  ],
+  "github_packages": [
+    "git+https://.........",
+    "git+https://...."
+  ]
+}
