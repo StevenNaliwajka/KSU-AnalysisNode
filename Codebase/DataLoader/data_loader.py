@@ -69,14 +69,14 @@ class DataLoader:
 
                         key = f"{csv_category}_instance{instance_id}"
                         if key not in self.data[csv_category]:
-                            self.data[csv_category][key] = {"data": []}  # Only store regular data
+                            self.data[csv_category][key] = {"data": []}
 
                         self.data[csv_category][key]["data"].append(data_df)
 
-                        print(f"✅ Loaded: {file} | Columns: {matching_columns}")
+                        print(f"Loaded: {file} | Columns: {matching_columns}")
 
                     except Exception as e:
-                        print(f"⚠️ Skipping {file}: {e}")  # Skip files with errors
+                        print(f"Skipping {file}: {e}")
 
     def load_metadata(self, csv_category: str, instance_id: int) -> dict:
         """
