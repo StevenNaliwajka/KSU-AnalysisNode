@@ -14,3 +14,6 @@ def setup_files():
 
     # Create Data folder
     generic_create_folder(get_data_folder())
+
+if __name__ == '__main__':
+    setup_files()
