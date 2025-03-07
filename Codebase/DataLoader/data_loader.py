@@ -144,7 +144,7 @@ if __name__ == "__main__":
     loader.load_data("TVWSScenario", 2, {"US1", "US0", "URSSI"})
 
     # Load "SoilData-1" dynamically
-    loader.load_data("SoilData", 1, {"Soil Moisture Value", "Soil Moisture (%)"})
+    loader.load_data("SoilData", 2, {"Soil Moisture Value", "Soil Moisture (%)"})
 
 
     # Load a hypothetical new dataset category: "NewCategory_instance5"

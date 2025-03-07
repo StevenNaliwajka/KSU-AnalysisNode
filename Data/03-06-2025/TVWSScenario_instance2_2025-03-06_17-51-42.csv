@@ -1,0 +1,9 @@
+CName,PIp,CIp,AngleCAntennaToPRadio (°),AnglePAntennaToCRadio (°),HDist (ft),VDist (ft),SpecialValueName,SpecialValue,PLocation,CLocation
+radio2,192.168.1.254,192.168.1.11,60,15,100,150,dirt,0.5,None, None
+Date (Year-Mon-Day),Time (Hour-Min-Sec),Channel,PTxPower,PRxGain,Bandwidth,PTemp (°C),PUpTime (Day-Hour:Min:Sec),PFreeMemory (%),DS0,DS1,DRSSI,DNoiseFloor,DSNR,DTxModulation,DRxModulation,CTemp (°C),CUpTime,ULinkUpTime,CTxPower,US0,US1,URSSI,USNoiseFloor,USNR,UTxModulation,UTxPackets (Pkts.),URxModulation,URxPackets (Pkts.),PingTimeAVG
+2025-03-06,17-52-06,17,5.0,2.0,6.0,34.00,25-23:30:51,70,-68.5,-62.0,-61.0,-100.0,39.0,MCS 7 shortGI,MCS 15,31.00,0-03:24:46,0-03:24:04,7.0,-60.0,-63.0,-59.0,-100.0,41.0,MCS 15,96828,MCS 7 short GI,38726,0
+2025-03-06,17-52-16,17,5.0,2.0,6.0,34.00,25-23:31:03,70,-70.0,-62.0,-61.0,-100.0,39.0,MCS 7 shortGI,MCS 15,31.00,0-03:24:54,0-03:24:15,7.0,-61.0,-64.0,-59.0,-101.0,42.0,MCS 15,96941,MCS 7 short GI,38801,0
+2025-03-06,17-52-26,17,5.0,2.0,6.0,34.00,25-23:31:11,70,-68.0,-63.0,-62.0,-100.0,38.0,MCS 7 shortGI,MCS 15,31.00,0-03:25:03,0-03:24:27,7.0,-61.0,-62.0,-58.0,-100.0,42.0,MCS 15,97074,MCS 7 short GI,38895,0
+2025-03-06,17-52-37,17,5.0,2.0,6.0,34.00,25-23:31:23,70,-68.0,-62.0,-61.0,-100.0,39.0,MCS 7 shortGI,MCS 15,31.00,0-03:25:16,0-03:24:35,7.0,-61.0,-63.0,-59.0,-100.0,41.0,MCS 15,97167,MCS 7 short GI,38948,0
+2025-03-06,17-52-47,17,5.0,2.0,6.0,34.00,25-23:31:34,69,-68.0,-62.0,-61.0,-100.0,39.0,MCS 7 shortGI,MCS 15,31.00,0-03:25:24,0-03:24:47,7.0,-61.0,-62.0,-59.0,-99.0,40.0,MCS 15,97292,MCS 7 short GI,39040,0
+2025-03-06,17-52-58,17,5.0,2.0,6.0,34.00,25-23:31:42,70,-68.0,-62.0,-61.0,-100.0,39.0,MCS 7 shortGI,MCS 15,31.00,0-03:25:37,0-03:24:59,7.0,-60.0,-61.0,-58.0,-97.0,39.0,MCS 15 short GI,97403,MCS 7 short GI,39111,0
