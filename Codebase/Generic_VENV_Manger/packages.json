@@ -3,6 +3,10 @@
     "pandas",
     "numpy",
     "matplotlib",
-    "scipy"
+    "scipy",
+    "pillow"
+  ],
+  "github_packages": [
+    "git+https://github.com/StevenNaliwajka/Generic_FILE_IO"
   ]
 }

@@ -9,7 +9,8 @@ def run() -> None:
     scripts = {
         "1": ("packet_rate_analyzer.py", ["tvws_instance"]),
         "2": ("rssi_vs_moisture.py", ["tvws_instance", "soil_moisture_instance", "\"drssi\" or \"urssi\""]),
-        "3": ("snr_vs_moisture.py", ["tvws_instance", "soil_moisture_instance", "\"dsnr\" or \"usnr\""])
+        "3": ("rssi_vs_moisture2.py", ["tvws_instance", "soil_moisture_instance", "\"drssi\" or \"urssi\""]),
+        "4": ("snr_vs_moisture.py", ["tvws_instance", "soil_moisture_instance", "\"dsnr\" or \"usnr\""])
     }
 
     print("Select an analysis script to run:")
