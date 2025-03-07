@@ -1,28 +1,24 @@
 import sys
 from datetime import datetime
 import subprocess
+from pathlib import Path
+
 from PIL import Image, ImageDraw, ImageFont
 
 from Codebase.Pathing.get_analysis_folder import get_analysis_folder
-from Codebase.Pathing.get_output import get_analysis_output
 from Codebase.Pathing.get_python_venv_exec_path import get_python_venv_exec_path
 from Codebase.Pathing.get_raw_photos import get_raw_photos
 
 
-def four_x_four_analysis(comp_1:str, comp_1_id:str, comp_2:str, comp_2_id:str) -> None:
+def four_x_four_analysis(analysis_script:str, output_path:str, comp_1:str, comp_1_id:str, comp_2:str, comp_2_id:str) -> None:
     # gen paths
     analysis_folder = get_analysis_folder()
     raw_folder = get_raw_photos()
 
-    analysis_output_folder = get_analysis_output()
-    date = datetime.today().strftime('%Y-%m-%d')
-    output_folder = analysis_output_folder / date
-
-    output_path = output_folder / f"{comp_1}_vs_{comp_2}.png"
-
     # Path to venv python
     venv_python = get_python_venv_exec_path()
 
+    output_folder = Path(output_path).parent
     # Ensure output folder exists
     output_folder.mkdir(parents=True, exist_ok=True)
 
@@ -43,23 +39,14 @@ def four_x_four_analysis(comp_1:str, comp_1_id:str, comp_2:str, comp_2_id:str) -
         img_filename = f"{comp_1}_vs_{comp_2}_{tvws_instance}_{soil_moisture_instance}.png"
         img_path = raw_folder / img_filename
 
-        '''
-        # run script
         command = [
             str(venv_python),
-            str(analysis_folder / f"{comp_1}_vs_{comp_2}.py"),
+            str(analysis_folder / analysis_script),
             str(tvws_instance),
             str(soil_moisture_instance),
-            arg1,
-            str(raw_folder / img_filename)
-        ]
-        '''
-        command = [
-            str(venv_python),
-            str(analysis_folder / f"tvws_var_vs_soil_var.py"),
-            str(tvws_instance),
-            str(soil_moisture_instance),
+            str(comp_1),
             str(comp_1_id),
+            str(comp_2),
             str(comp_2_id),
             str(raw_folder / img_filename)
         ]
@@ -146,10 +133,10 @@ def four_x_four_analysis(comp_1:str, comp_1_id:str, comp_2:str, comp_2_id:str) -
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    req_value = 4
+    req_value = 6
     if len(args) < req_value:
         print(f"Error: Not enough arguments provided. Expected {req_value} values.")
         sys.exit(1)
 
-    comp_1, comp_1_id, comp_2, comp_2_id= args[:4]
-    four_x_four_analysis(comp_1, comp_1_id, comp_2, comp_2_id)
+    analysis_script, output_path, comp_1, comp_1_id, comp_2, comp_2_id= args[:6]
+    four_x_four_analysis(analysis_script, output_path, comp_1, comp_1_id, comp_2, comp_2_id)
