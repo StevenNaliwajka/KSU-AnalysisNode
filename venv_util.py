@@ -66,8 +66,8 @@ class VENVUtil:
         print("Virtual environment setup complete.")
 
     @staticmethod
-    def run_with_venv(venv_destination_folder: str, python_file_to_run: str) -> None:
-        """Activate venv and run the script."""
+    def run_with_venv(venv_destination_folder: str, python_file_to_run: str, *args) -> None:
+        """Activate venv and run the script with optional arguments."""
         load_env_vars()
 
         venv_destination_folder = ensure_venv_path(venv_destination_folder)
@@ -79,7 +79,9 @@ class VENVUtil:
             return
 
         try:
-            subprocess.run([venv_python, python_file_to_run], check=True)
+            # Construct the command with optional arguments
+            command = [venv_python, python_file_to_run] + list(args)
+            subprocess.run(command, check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error running script: {e}")
 
