@@ -8,8 +8,8 @@ def run() -> None:
 
     scripts = {
         "1": ("packet_rate_analyzer.py", ["tvws_instance"]),
-        "2": ("urssi_vs_moisture.py", ["tvws_instance", "soil_moisture_instance"]),
-        "3": ("drssi_vs_moisture.py", ["tvws_instance", "soil_moisture_instance"]),
+        "2": ("rssi_vs_moisture.py", ["tvws_instance", "soil_moisture_instance", "\"drssi\" or \"urssi\""]),
+        "3": ("snr_vs_moisture.py", ["tvws_instance", "soil_moisture_instance", "\"dsnr\" or \"usnr\""])
     }
 
     print("Select an analysis script to run:")
@@ -25,7 +25,7 @@ def run() -> None:
     inputs = {}
 
     for param in required_inputs:
-        inputs[param] = get_int_input(f"Enter {param}: ")
+        inputs[param] = get_input(f"Enter {param}: ")
 
     print(f"Running: {analysis_folder / analysis_to_run} with parameters {inputs}")
 
@@ -36,12 +36,12 @@ def run() -> None:
     VENVUtil.run_with_venv(str(get_project_root()), str(analysis_folder / analysis_to_run), *input_args)
 
 
-def get_int_input(prompt):
+def get_input(prompt):
     while True:
         try:
-            return int(input(prompt))
+            return input(prompt)
         except ValueError:
-            print("Invalid input. Please enter an integer.")
+            print("Invalid input.")
 
 
 if __name__ == "__main__":
