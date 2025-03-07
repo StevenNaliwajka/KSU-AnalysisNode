@@ -93,7 +93,7 @@ def four_x_four_analysis(analysis_script:str, output_path:str, comp_1:str, comp_
         combined_image.paste(img, pos)
 
     # Add **centered** column labels (Soil moisture)
-    column_labels = ["Soil Moisture: -6\"", "Soil Moisture: -1\""]
+    column_labels = ["Soil: -6\"", "Soil: -1\""]
     for i, label in enumerate(column_labels):
         text_width = font.getbbox(label)[2]  # Get width of the text
         x = label_space_x + i * width + (width - text_width) // 2  # Proper centering
