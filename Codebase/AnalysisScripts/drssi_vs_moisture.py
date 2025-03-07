@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -6,15 +8,15 @@ import matplotlib.dates as mdates
 
 from Codebase.DataLoader.data_loader import DataLoader
 
-def drssi_vs_moisture():
+def drssi_vs_moisture(tvws_num:int, moisture_num:int) -> None:
     loader = DataLoader()
 
-    tvws_instance = 1
+    tvws_instance = tvws_num
     # Load RSSI Data (Only DRSSI)
     loader.load_data("TVWSScenario", tvws_instance, {"DRSSI", "Date (Year-Mon-Day)", "Time (Hour-Min-Sec)"})
     rssi_key = f"TVWSScenario_instance{tvws_instance}"
 
-    moisture_instance = 1
+    moisture_instance = moisture_num
     # Load Soil Moisture Data
     loader.load_data("SoilData", moisture_instance, {"Soil Moisture Value", "Date (Year-Mon-Day)", "Time (Hour-Min-Sec)"})
     moisture_key = f"SoilData_instance{moisture_instance}"
@@ -103,4 +105,13 @@ def drssi_vs_moisture():
 
 # Usage Example
 if __name__ == "__main__":
-    drssi_vs_moisture()
+    args = sys.argv[1:]
+
+    req_value = 2
+    if len(args) < req_value:
+        print(f"Error: Not enough arguments provided. Expected {req_value} values.")
+        sys.exit(1)
+    tvws_instance, moisture_instance = map(int, args[:2])
+
+    drssi_vs_moisture(tvws_instance, moisture_instance)
+

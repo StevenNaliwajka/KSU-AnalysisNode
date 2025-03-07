@@ -1,12 +1,16 @@
+import sys
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from unicodedata import category
 
 from Codebase.DataLoader.data_loader import DataLoader
 
 
-def analyze_radio_data(category: str, instance_id: int):
+def packet_rate_analyzer(instance_id: int):
     loader = DataLoader()
+    category = "TVWSScenario"
     loader.load_data(category, instance_id, {"UTxPackets (Pkts.)", "URxPackets (Pkts.)"})  # Using correct column names
     radio_key = f"{category}_instance{instance_id}"
 
@@ -89,4 +93,12 @@ def analyze_radio_data(category: str, instance_id: int):
 
 # Usage Example
 if __name__ == "__main__":
-    analyze_radio_data("TVWSScenario", 1)
+    args = sys.argv[1:]
+
+    req_value = 1
+    if len(args) < req_value:
+        print(f"Error: Not enough arguments provided. Expected {req_value} values.")
+        sys.exit(1)
+    tvws_instance = int(args[0])
+
+    packet_rate_analyzer(tvws_instance)
