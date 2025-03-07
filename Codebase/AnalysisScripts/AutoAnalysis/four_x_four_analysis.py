@@ -9,7 +9,7 @@ from Codebase.Pathing.get_python_venv_exec_path import get_python_venv_exec_path
 from Codebase.Pathing.get_raw_photos import get_raw_photos
 
 
-def four_x_four_analysis(comp_1:str, comp_2:str, arg1:str) -> None:
+def four_x_four_analysis(comp_1:str, comp_1_id:str, comp_2:str, comp_2_id:str) -> None:
     # gen paths
     analysis_folder = get_analysis_folder()
     raw_folder = get_raw_photos()
@@ -18,7 +18,7 @@ def four_x_four_analysis(comp_1:str, comp_2:str, arg1:str) -> None:
     date = datetime.today().strftime('%Y-%m-%d')
     output_folder = analysis_output_folder / date
 
-    output_path = output_folder / f"{comp_1}_vs_{comp_2}_{arg1}.png"
+    output_path = output_folder / f"{comp_1}_vs_{comp_2}.png"
 
     # Path to venv python
     venv_python = get_python_venv_exec_path()
@@ -40,9 +40,10 @@ def four_x_four_analysis(comp_1:str, comp_2:str, arg1:str) -> None:
 
     # run 4 times
     for tvws_instance, soil_moisture_instance in variations:
-        img_filename = f"{comp_1}_vs_{comp_2}_{arg1}_{tvws_instance}_{soil_moisture_instance}.png"
+        img_filename = f"{comp_1}_vs_{comp_2}_{tvws_instance}_{soil_moisture_instance}.png"
         img_path = raw_folder / img_filename
 
+        '''
         # run script
         command = [
             str(venv_python),
@@ -52,6 +53,17 @@ def four_x_four_analysis(comp_1:str, comp_2:str, arg1:str) -> None:
             arg1,
             str(raw_folder / img_filename)
         ]
+        '''
+        command = [
+            str(venv_python),
+            str(analysis_folder / f"tvws_var_vs_soil_var.py"),
+            str(tvws_instance),
+            str(soil_moisture_instance),
+            str(comp_1_id),
+            str(comp_2_id),
+            str(raw_folder / img_filename)
+        ]
+        # tvws_num: int, moisture_num: int, var_1: str, var_2: str, output_path: str
 
         try:
             subprocess.run(command, check=True)
@@ -134,10 +146,10 @@ def four_x_four_analysis(comp_1:str, comp_2:str, arg1:str) -> None:
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    req_value = 3
+    req_value = 4
     if len(args) < req_value:
         print(f"Error: Not enough arguments provided. Expected {req_value} values.")
         sys.exit(1)
 
-    comp_1, comp_2, arg1 = args[:3]
-    four_x_four_analysis(comp_1, comp_2, arg1)
+    comp_1, comp_1_id, comp_2, comp_2_id= args[:4]
+    four_x_four_analysis(comp_1, comp_1_id, comp_2, comp_2_id)
