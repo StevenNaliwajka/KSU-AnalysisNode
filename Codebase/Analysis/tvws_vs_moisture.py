@@ -1,10 +1,11 @@
+import subprocess
 from datetime import datetime
 
-from Codebase.Generic_VENV_Manger.venv_util import VENVUtil
-from Codebase.Pathing.get_graph_comp import get_graph_comp
-from Codebase.Pathing.get_graph_folder import get_graph_folder
-from Codebase.Pathing.get_output import get_output
-from Codebase.Pathing.get_project_root import get_project_root
+
+from Pathing.get_graph_comp import get_graph_comp
+from Pathing.get_graph_folder import get_graph_folder
+from Pathing.get_output import get_output
+from Pathing.get_project_root import get_project_root
 from generic_file_io.core.generic_create_folder import generic_create_folder
 
 
@@ -50,11 +51,16 @@ def tvws_vs_moisture():
                 final_file_name = f"graph_4x4_{graph_script}_{soil_value}_{tvws_value}.png"
                 final_file_path = tvws_folder / final_file_name
 
-
-                VENVUtil.run_with_venv(str(get_project_root()), str(graph_comp_path),
-                                       str(graph_script_path), str(final_file_path),
-                                       tvws_value, tvws_values[tvws_value],
-                                       soil_value, soil_values[soil_value])
+                subprocess.run([
+                    "python3",
+                    str(graph_comp_path),
+                    str(graph_script_path),
+                    str(final_file_path),
+                    tvws_value,
+                    tvws_values[tvws_value],
+                    soil_value,
+                    soil_values[soil_value]
+                ], check=True)
 
             # analysis_script:str, output_path:str, comp_1:str, comp_1_id:str, comp_2:str, comp_2_id:str
     '''

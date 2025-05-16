@@ -1,4 +1,6 @@
 import sys
+from pathlib import Path
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
@@ -95,6 +97,8 @@ def pt_vs_pt_normalized_scatter(tvws_num: int, moisture_num: int, var_1: str, va
     plt.tight_layout()
     plt.grid(True)
 
+    # Ensure the output folder exists
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output_path)
     print(f"Graph saved to {output_path}")
 
