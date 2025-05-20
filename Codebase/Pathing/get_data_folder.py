@@ -5,3 +5,6 @@ def get_data_folder()-> Path:
     root = get_project_root()
     data_folder = root / "Data"
     return data_folder
+
+if __name__ == "__main__":
+    print(get_data_folder())

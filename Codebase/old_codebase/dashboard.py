@@ -1,7 +1,7 @@
 import dash
 from dash import dcc, html, Input, Output
 import pandas as pd
-from Codebase.DataManager.data_loader import DataLoader
+from Codebase.DataManager.old_data_loader import DataLoader
 from datetime import datetime
 from pathlib import Path
 import plotly.graph_objects as go
@@ -59,12 +59,23 @@ tvws_cols = {
 }
 soil_cols = {
     "date (year-mon-day)", "time (hour-min-sec)",
-    "soil moisture value", "soil temperature (°c)", "soil moisture (%)"
+    "soil moisture value", "soil temperature (\u00b0c)", "soil moisture (%)"
+}
+ambient_cols = {
+    "date", "simple date", "outdoor temperature (\u00b0f)", "feels like (\u00b0f)", "dew point (\u00b0f)",
+    "wind speed (mph)", "wind gust (mph)", "max daily gust (mph)", "wind direction (\u00b0)",
+    "rain rate (in/hr)", "daily rain (in)", "weekly rain (in)", "monthly rain (in)",
+    "yearly rain (in)", "relative pressure (inhg)", "humidity (%)", "ultra-violet radiation index",
+    "solar radiation (w/m^2)", "indoor temperature (\u00b0f)", "indoor humidity (%)",
+    "avg wind direction (10 mins) (\u00b0)", "outdoor battery", "absolute pressure (inhg)",
+    "indoor battery", "co2 battery", "indoor feels like (\u00b0f)", "indoor dew point (\u00b0f)"
 }
 
 for i in [1, 2]:
     loader.load_data("SoilData", i, soil_cols)
     loader.load_data("TVWSScenario", i, tvws_cols)
+
+loader.load_data("AmbientWeather", 0, ambient_cols)
 
 def parse_datetime(df):
     cols = [col.strip().lower() for col in df.columns]
@@ -73,9 +84,12 @@ def parse_datetime(df):
         time_col = df.columns[cols.index("time (hour-min-sec)")]
         time_str = df[time_col].astype(str).str.replace("-", ":", regex=False)
         return pd.to_datetime(df[date_col] + " " + time_str, errors="coerce")
+    elif "simple date" in cols:
+        simple_col = df.columns[cols.index("simple date")]
+        return pd.to_datetime(df[simple_col], errors="coerce")
     return pd.Series(pd.NaT, index=df.index)
 
-available_columns = sorted(set(soil_cols | tvws_cols))
+available_columns = sorted(set(soil_cols | tvws_cols | ambient_cols))
 
 # -------------------------
 # Dash Layout
@@ -84,7 +98,7 @@ available_columns = sorted(set(soil_cols | tvws_cols))
 app = dash.Dash(__name__)
 
 app.layout = html.Div([
-    html.H1("📊 Time Series Dashboard (Dual Y-Axis)"),
+    html.H1("\ud83d\udcca Time Series Dashboard (Dual Y-Axis)"),
 
     html.Div([
         html.Label("SoilData Instance"),
@@ -132,6 +146,15 @@ app.layout = html.Div([
     ], style={"width": "48%", "display": "inline-block", "marginLeft": "4%", "marginTop": "20px"}),
 
     html.Div([
+        html.Label("Third Metric (Y3, plotted on Y1 axis)"),
+        dcc.Dropdown(
+            id='y3-axis',
+            options=[{"label": col, "value": col} for col in available_columns],
+            value=None
+        ),
+    ], style={"width": "48%", "marginTop": "20px"}),
+
+    html.Div([
         html.Label("Time Aggregation"),
         dcc.Dropdown(
             id='time-agg',
@@ -159,7 +182,6 @@ app.layout = html.Div([
     html.Div(id='debug-output', style={'whiteSpace': 'pre-wrap'})
 ])
 
-
 # -------------------------
 # Graph Callback
 # -------------------------
@@ -169,6 +191,7 @@ app.layout = html.Div([
     [
         Input('y1-axis', 'value'),
         Input('y2-axis', 'value'),
+        Input('y3-axis', 'value'),  # NEW
         Input('time-agg', 'value'),
         Input('date-range', 'start_date'),
         Input('date-range', 'end_date'),
@@ -176,12 +199,18 @@ app.layout = html.Div([
         Input('tvws-instance', 'value')
     ]
 )
-def update_graph(y1_col, y2_col, agg_str, start_date, end_date, soil_instance, tvws_instance):
+def update_graph(y1_col, y2_col, y3_col, agg_str, start_date, end_date, soil_instance, tvws_instance):
+    # Normalize selected column names
+    y1_col = y1_col.lower()
+    y2_col = y2_col.lower()
+    y3_col = y3_col.lower() if y3_col else None
+
     soil_key = f"SoilData_instance{soil_instance}"
     tvws_key = f"TVWSScenario_instance{tvws_instance}"
 
     try:
         soil_df = pd.concat(loader.data["SoilData"][soil_key]["data"]).copy()
+        soil_df.columns = soil_df.columns.str.lower()
         soil_df["datetime"] = parse_datetime(soil_df)
         soil_df = soil_df.dropna(subset=["datetime"])
     except Exception:
@@ -189,55 +218,94 @@ def update_graph(y1_col, y2_col, agg_str, start_date, end_date, soil_instance, t
 
     try:
         tvws_df = pd.concat(loader.data["TVWSScenario"][tvws_key]["data"]).copy()
+        tvws_df.columns = tvws_df.columns.str.lower()
         tvws_df["datetime"] = parse_datetime(tvws_df)
         tvws_df = tvws_df.dropna(subset=["datetime"])
     except Exception:
         tvws_df = pd.DataFrame(columns=["datetime"])
 
+    try:
+        ambient_df = pd.concat(loader.data["AmbientWeather"]["AmbientWeather_instance0"]["data"]).copy()
+        ambient_df.columns = ambient_df.columns.str.lower()
+        ambient_df["datetime"] = parse_datetime(ambient_df)
+        ambient_df = ambient_df.dropna(subset=["datetime"])
+    except Exception:
+        ambient_df = pd.DataFrame(columns=["datetime"])
+
+    # Y1
     if y1_col in soil_df.columns:
         y1_data = soil_df[["datetime", y1_col]].copy()
     elif y1_col in tvws_df.columns:
         y1_data = tvws_df[["datetime", y1_col]].copy()
+    elif y1_col in ambient_df.columns:
+        y1_data = ambient_df[["datetime", y1_col]].copy()
     else:
         return go.Figure().add_annotation(text=f"Y1 column '{y1_col}' not found")
 
+    # Y2
     if y2_col in soil_df.columns:
         y2_data = soil_df[["datetime", y2_col]].copy()
     elif y2_col in tvws_df.columns:
         y2_data = tvws_df[["datetime", y2_col]].copy()
+    elif y2_col in ambient_df.columns:
+        y2_data = ambient_df[["datetime", y2_col]].copy()
     else:
         return go.Figure().add_annotation(text=f"Y2 column '{y2_col}' not found")
 
-    y1_data = y1_data.set_index("datetime").sort_index()
-    y2_data = y2_data.set_index("datetime").sort_index()
+    # Y3 (optional)
+    y3_data = None
+    if y3_col:
+        if y3_col in soil_df.columns:
+            y3_data = soil_df[["datetime", y3_col]].copy()
+        elif y3_col in tvws_df.columns:
+            y3_data = tvws_df[["datetime", y3_col]].copy()
+        elif y3_col in ambient_df.columns:
+            y3_data = ambient_df[["datetime", y3_col]].copy()
 
-    if start_date and end_date:
-        y1_data = y1_data[start_date:end_date]
-        y2_data = y2_data[start_date:end_date]
+    # Convert to datetime index and filter by range
+    for data in [("y1", y1_data), ("y2", y2_data), ("y3", y3_data)]:
+        name, df = data
+        if df is not None:
+            df.set_index("datetime", inplace=True)
+            df.sort_index(inplace=True)
+            df = df[start_date:end_date]
+            df = df.resample(agg_str).mean().dropna()
+            if name == "y1":
+                y1_data = df
+            elif name == "y2":
+                y2_data = df
+            elif name == "y3":
+                y3_data = df
 
+    # Handle empty data
     if y1_data.empty or y2_data.empty:
         return go.Figure().add_annotation(text="No data in selected time range")
 
-    y1_resampled = y1_data.resample(agg_str).mean().dropna()
-    y2_resampled = y2_data.resample(agg_str).mean().dropna()
-
+    # Create plot
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
     fig.add_trace(go.Scatter(
-        x=y1_resampled.index, y=y1_resampled[y1_col],
+        x=y1_data.index, y=y1_data[y1_col],
         name=f"{y1_col} (Y1)", mode="markers"
     ), secondary_y=False)
 
     fig.add_trace(go.Scatter(
-        x=y2_resampled.index, y=y2_resampled[y2_col],
+        x=y2_data.index, y=y2_data[y2_col],
         name=f"{y2_col} (Y2)", mode="markers"
     ), secondary_y=True)
 
+    if y3_col and y3_data is not None and not y3_data.empty:
+        fig.add_trace(go.Scatter(
+            x=y3_data.index, y=y3_data[y3_col],
+            name=f"{y3_col} (Y3)", mode="markers",
+            marker=dict(symbol="circle-open", size=6)
+        ), secondary_y=False)
+
     fig.update_layout(
-        title=f"{y1_col} vs {y2_col} (Time Aggregated: {agg_str})",
+        title=f"{y1_col} vs {y2_col}" + (f" + {y3_col}" if y3_col else "") + f" (Time Aggregated: {agg_str})",
         xaxis_title="Time",
-        yaxis_title=y1_col,
-        yaxis2_title=y2_col,
+        yaxis_title="Y1 / Y3",
+        yaxis2_title="Y2",
         legend=dict(x=0.01, y=0.99),
         margin=dict(l=40, r=40, t=60, b=40),
         hovermode="x unified",
@@ -245,6 +313,7 @@ def update_graph(y1_col, y2_col, agg_str, start_date, end_date, soil_instance, t
     )
 
     return fig
+
 
 if __name__ == "__main__":
     app.run(debug=True)

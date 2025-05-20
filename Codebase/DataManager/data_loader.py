@@ -1,13 +1,3 @@
-'''
-# Not sure why it fails in other places but works here without this import... more research to be done.
-import sys
-from pathlib import Path
-
-# Dynamically find the project root, required to allow for correct imports.
-folder_ct = 2  ### NOT always 2. Change to the qty of folders up before root.
-PROJECT_ROOT = Path(__file__).resolve().parents[folder_ct]
-sys.path.append(str(PROJECT_ROOT))
-'''
 import os
 import pandas as pd
 import re
@@ -19,99 +9,79 @@ class DataLoader:
     def __init__(self):
         self.project_root = get_project_root()
         self.data_folder = get_data_folder()
-        self.data = {}  # Dictionary to store data dynamically
+        self.data = {}
 
     def load_data(self, csv_category: str, instance_id: int, set_of_columns: set) -> None:
-        """
-        Loads regular data (excluding metadata) for a specific category and instance ID across all date folders.
-        Assumes the actual data table starts at line 3 (index 2).
-
-        Parameters:
-        - csv_category: The general category of data (e.g., "SoilData", "TVWSScenario", "NewCategory").
-        - instance_id: The number in the filename (e.g., 1 for SoilData-1, radio1, etc.).
-        - set_of_columns: A set of column names to load.
-
-        Returns:
-        - None (stores results in self.data)
-        """
         all_folders = self.get_date_folders()
-        data_frames = []
 
         for folder in all_folders:
+            print(f"[DEBUG] Scanning folder: {folder}")
             for file in os.listdir(folder):
-                if file.endswith(".csv") and self._matches_file(file, csv_category, instance_id):
-                    full_path = os.path.join(folder, file)
+                if not file.endswith(".csv"):
+                    continue
 
-                    try:
-                        # Skip top two lines due to headder
-                        data_df = pd.read_csv(full_path, skiprows=2, low_memory=False)
+                print(f"[DEBUG] Found file: {file}")
 
-                        # Normalize column names
-                        data_df.columns = [col.strip().lower() for col in data_df.columns]
+                if not self._matches_file(file, csv_category, instance_id):
+                    continue
 
-                        # Normalize requested column
-                        requested_columns = {col.strip().lower() for col in set_of_columns}
+                print(f"[DEBUG] Matched: {file} for category '{csv_category}', instance '{instance_id}'")
 
-                        # Find matching columns
-                        matching_columns = [col for col in data_df.columns if col in requested_columns]
+                full_path = os.path.join(folder, file)
 
-                        if not matching_columns:
-                            print(f"Skipping {file}: None of the requested columns found in regular data.")
-                            # print(f"Available columns: {list(data_df.columns)}")
-                            continue
+                try:
+                    skip_rows = 0 if instance_id == 0 else 2  # AmbientWeather starts at row 0, others skip metadata
+                    data_df = pd.read_csv(full_path, skiprows=skip_rows, low_memory=False)
 
-                        # Filter data to requested columns
-                        data_df = data_df[matching_columns]
+                    # Normalize columns
+                    data_df.columns = [col.strip().lower() for col in data_df.columns]
+                    requested_columns = {col.strip().lower() for col in set_of_columns}
+                    matching_columns = [col for col in data_df.columns if col in requested_columns]
 
-                        # Store data dynamically
-                        if csv_category not in self.data:
-                            self.data[csv_category] = {}
+                    if not matching_columns:
+                        print(f"[WARN] Skipping {file}: None of the requested columns found.")
+                        continue
 
-                        key = f"{csv_category}_instance{instance_id}"
-                        if key not in self.data[csv_category]:
-                            self.data[csv_category][key] = {"data": []}
+                    data_df = data_df[matching_columns]
 
-                        self.data[csv_category][key]["data"].append(data_df)
+                    if csv_category not in self.data:
+                        self.data[csv_category] = {}
 
-                        print(f"Loaded: {file} | Columns: {matching_columns}")
+                    key = f"{csv_category}_instance{instance_id}"
+                    if key not in self.data[csv_category]:
+                        self.data[csv_category][key] = {"data": []}
 
-                    except Exception as e:
-                        print(f"Skipping {file}: {e}")
+                    self.data[csv_category][key]["data"].append(data_df)
+
+                    print(f"[INFO] Loaded: {file} | Columns: {list(data_df.columns)}")
+
+                except Exception as e:
+                    print(f"[ERROR] Skipping {file} due to error: {e}")
 
     def load_metadata(self, csv_category: str, instance_id: int) -> dict:
-        """
-        Loads metadata for a specific category and instance ID across all date folders.
-        Assumes metadata is in the first two lines of the CSV.
-
-        Parameters:
-        - csv_category: The general category of data (e.g., "SoilData", "TVWSScenario", "NewCategory").
-        - instance_id: The number in the filename (e.g., 1 for SoilData-1, radio1, etc.).
-
-        Returns:
-        - A dictionary containing metadata
-        """
         all_folders = self.get_date_folders()
         metadata_list = []
 
         for folder in all_folders:
             for file in os.listdir(folder):
-                if file.endswith(".csv") and self._matches_file(file, csv_category, instance_id):
-                    full_path = os.path.join(folder, file)
+                if not file.endswith(".csv"):
+                    continue
+                if not self._matches_file(file, csv_category, instance_id):
+                    continue
 
-                    try:
-                        # Read only the first two lines of metadata
-                        metadata = self._extract_metadata(full_path)
-                        if metadata:
-                            metadata_list.append(metadata)
-                            print(f"Loaded Metadata: {file} | Keys: {list(metadata.keys())}")
+                full_path = os.path.join(folder, file)
 
-                    except Exception as e:
-                        print(f"Skipping metadata for {file}: {e}")
+                try:
+                    metadata = self._extract_metadata(full_path)
+                    if metadata:
+                        metadata_list.append(metadata)
+                        print(f"[INFO] Loaded Metadata: {file} | Keys: {list(metadata.keys())}")
+                except Exception as e:
+                    print(f"[ERROR] Skipping metadata for {file}: {e}")
 
         return metadata_list
 
     def get_date_folders(self):
-        # Gets date folders
         return [
             os.path.join(self.data_folder, folder)
             for folder in os.listdir(self.data_folder)
@@ -119,12 +89,12 @@ class DataLoader:
         ]
 
     def _matches_file(self, file_name: str, category: str, instance_id: int) -> bool:
-        # checks if any file in the date folder matches the correct instance orientation
+        if instance_id == 0 and category.lower() == "ambientweather":
+            return file_name.lower().startswith("ambient-weather-") and file_name.endswith(".csv")
         pattern = rf"^{category}_instance{instance_id}.*\.csv$"
         return bool(re.match(pattern, file_name))
 
     def _extract_metadata(self, file_path: str) -> dict:
-        # pulls out the metadata dict. Returns it as a dict.... tbd if thats best
         metadata = {}
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
@@ -136,19 +106,11 @@ class DataLoader:
 
         return metadata if metadata else None
 
+
 # EX:
 if __name__ == "__main__":
     loader = DataLoader()
-
-    # Load "radio2" files dynamically (no hardcoding)
     loader.load_data("TVWSScenario", 2, {"US1", "US0", "URSSI"})
-
-    # Load "SoilData-1" dynamically
     loader.load_data("SoilData", 2, {"Soil Moisture Value", "Soil Moisture (%)"})
-
-
-    # Load a hypothetical new dataset category: "NewCategory_instance5"
-    # loader.load_data("NewCategory", 5, {"FieldA", "FieldB"})
-
-    # Check stored data dynamically
+    loader.load_data("AmbientWeather", 0, {"date", "simple date", "humidity (%)"})
     print(loader.data)

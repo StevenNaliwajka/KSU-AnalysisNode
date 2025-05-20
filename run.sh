@@ -12,8 +12,8 @@ VENV_PATH="$PROJECT_ROOT/venv"
 # Activate the virtual environment
 source "$VENV_PATH/bin/activate"
 
-# Add Codebase to PYTHONPATH for clean imports
+# Add Codebase to PYTHONPATH for clean module imports
 export PYTHONPATH="$PROJECT_ROOT/Codebase:$PYTHONPATH"
 
-# Run the Dash dashboard app
-python "$PROJECT_ROOT/dashboard.py"
+# Run the Dash dashboard app from Codebase
+python "$PROJECT_ROOT/Codebase/dashboard.py"

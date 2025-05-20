@@ -2,7 +2,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from Codebase.DataManager.data_loader import DataLoader
+from Codebase.DataManager.old_data_loader import DataLoader
 
 
 def rssi_vs_moisture2(tvws_num: int, moisture_num: int, drssi_or_urssi: str, output_path:str) -> None:

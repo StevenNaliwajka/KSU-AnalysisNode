@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 import matplotlib.dates as mdates
 
-from Codebase.DataManager.data_loader import DataLoader
+from Codebase.DataManager.old_data_loader import DataLoader
 
 def pt_vs_pt_normalized_scatter(tvws_num: int, moisture_num: int, var_1: str, var_1_id:str, var_2: str, var_2_id:str,
                                 output_path: str) -> None:

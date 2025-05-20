@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from Codebase.DataManager.data_loader import DataLoader
+from Codebase.DataManager.old_data_loader import DataLoader
 
 
 def packet_rate_analyzer(instance_id: int, output_path: str = None):
