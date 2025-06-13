@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Get the root of the project (where setup.sh lives)
+# Get the root of the project (where setup_linux.sh lives)
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PROJECT_ROOT
 
