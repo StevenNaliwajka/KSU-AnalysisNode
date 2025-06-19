@@ -1,3 +1,12 @@
+import os
+import sys
+
+# Add project root to path
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, "..", ".."))
+sys.path.append(PROJECT_ROOT)
+
+# Now your imports
 from Codebase.Pathing.get_data_folder import get_data_folder
 from Codebase.Pathing.get_raw_data import get_raw_data
 from Codebase.Pathing.get_raw_photos import get_raw_photos
