@@ -1,19 +1,18 @@
-from generic_file_io.core.generic_create_folder import generic_create_folder
-
 from Codebase.Pathing.get_data_folder import get_data_folder
 from Codebase.Pathing.get_raw_data import get_raw_data
 from Codebase.Pathing.get_raw_photos import get_raw_photos
 
 
 def setup_files():
-    # Create raw photos
-    generic_create_folder(get_raw_photos())
+    # Create folders
+    raw_photos_path = get_raw_photos()
+    raw_photos_path.mkdir(parents=True, exist_ok=True)
 
-    # Create raw data
-    generic_create_folder(get_raw_data())
+    raw_data_path = get_raw_data()
+    raw_data_path.mkdir(parents=True, exist_ok=True)
 
-    # Create Data folder
-    generic_create_folder(get_data_folder())
+    data_path = get_data_folder()
+    data_path.mkdir(parents=True, exist_ok=True)
 
 if __name__ == '__main__':
     setup_files()
