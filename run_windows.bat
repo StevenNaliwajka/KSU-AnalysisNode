@@ -1,24 +1,11 @@
 @echo off
-setlocal
+REM Entry point batch script to launch PowerShell run menu
 
-:: Define root directory (directory this script lives in)
-set "PROJECT_ROOT=%~dp0"
-set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
-set "VENV_PATH=%PROJECT_ROOT%\venv"
-set "PY_PATH=%VENV_PATH%\Scripts\python.exe"
-set "DASHBOARD_PATH=%PROJECT_ROOT%\Codebase\dashboard.py"
+REM Get the directory where this .bat file is located
+SET SCRIPT_DIR=%~dp0
 
-:: Check if venv exists
-if not exist "%PY_PATH%" (
-    echo Virtual environment not found. Run setup_windows.ps1 first.
-    pause
-    exit /b 1
-)
+REM Full path to the PowerShell script
+SET PS_SCRIPT=%SCRIPT_DIR%Codebase\Setup\run_windows.ps1
 
-:: Set PYTHONPATH
-set PYTHONPATH=%PROJECT_ROOT%\Codebase;%PYTHONPATH%
-
-:: Run dashboard
-"%PY_PATH%" "%DASHBOARD_PATH%"
-
-pause
+REM Call the PowerShell script
+powershell -ExecutionPolicy Bypass -File "%PS_SCRIPT%"

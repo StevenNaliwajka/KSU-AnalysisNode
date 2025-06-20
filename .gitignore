@@ -178,3 +178,6 @@ temp
 Data
 _old
 _set
+/Codebase/CorrelationModeling/MLBinary
+/Codebase/CorrelationModeling/Models
+train_debug.log

@@ -4,3 +4,5 @@ matplotlib
 scipy
 pillow
 dash
+PyQt5
+scikit-learn

@@ -1,7 +1,7 @@
 # setup_venv.ps1
 
 param (
-    [string]$venv = "$PSScriptRoot\..\..\venv"
+    [string]$venv = "$PSScriptRoot\..\..\.venv"
 )
 
 Write-Output "Setting up Python virtual environment..."

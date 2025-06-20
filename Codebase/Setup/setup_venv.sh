@@ -26,7 +26,7 @@ if [ -n "$CUSTOM_VENV" ]; then
   VENV_DIR="$CUSTOM_VENV"
   echo "(setup_venv.sh) Using custom virtual environment path: $VENV_DIR"
 else
-  VENV_DIR="$PROJECT_ROOT/venv"
+  VENV_DIR="$PROJECT_ROOT/.venv"
   echo "(setup_venv.sh) Using default virtual environment path: $VENV_DIR"
 fi
 

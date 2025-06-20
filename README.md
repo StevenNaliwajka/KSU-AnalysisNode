@@ -8,7 +8,7 @@ LINUX:
 4) Open "http://127.0.0.1:8050/" in browser.
 
 WINDOWS:
-1) Click "setup_windows.bat" or run "setup_windows.ps1" in powershell
+1) Double-Click "setup_windows.bat"
 2) Place data into "/Data"
-3) Click "run_windows.bat" or run "run_windows.ps1" in powershell
+3) Double-Click "run_windows.bat"
 4) Open "http://127.0.0.1:8050/" in browser.

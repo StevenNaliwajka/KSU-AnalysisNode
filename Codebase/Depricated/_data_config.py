@@ -1,6 +1,6 @@
 from pathlib import Path
-from DataManager.data_loader import DataLoader
-from DashboardApp.metadata_utils import extract_all_soil_depths, extract_all_tvws_specials
+from Codebase.DataManager.data_loader import DataLoader
+from Codebase.Dashboard.DashboardApp.metadata_utils import extract_all_soil_depths, extract_all_tvws_specials
 
 data_dir = Path(__file__).resolve().parents[2] / "Data"
 
