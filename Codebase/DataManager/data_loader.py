@@ -1,4 +1,5 @@
 import os
+import traceback
 from pathlib import Path
 
 import pandas as pd
@@ -56,13 +57,16 @@ class DataLoader:
             except Exception as e:
                 print(f"[ERROR] Skipping {file} due to error: {e}")
 
-    def read_csv(self, path, skip_rows=0):
+    def read_csv(self, path, header_line=0):
         try:
-            df = pd.read_csv(path, skiprows=skip_rows, low_memory=False)
+            # print(f"[DEBUG] Reading {path} with header on line {header_line}")
+            df = pd.read_csv(path, header=header_line, low_memory=False)
             df.columns = [col.strip().lower() for col in df.columns]
+            # print(f"df colums : {df.columns}")
             return df
         except Exception as e:
             print(f"[ERROR] Failed to read {path}: {e}")
+            traceback.print_exc()
             return None
 
     def add_to_data(self, category, key, df):
