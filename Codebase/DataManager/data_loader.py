@@ -266,8 +266,6 @@ class DataLoader:
 
         return metadata_list
 
-    import re
-
     def _matches_file(self, filename: str, category: str, instance_id: int) -> bool:
         filename = filename.lower()
         category = category.lower()
@@ -275,15 +273,20 @@ class DataLoader:
         # Check category match
         if category == "ambient":
             cat_match = "ambient" in filename
-            # print(f"[DEBUG] Matching ambient file '{filename}': cat_match={cat_match}")
-            return cat_match  # ambient ignores instance ID
+            print(f"[DEBUG] Matching ambient file '{filename}': cat_match={cat_match}")
+            return cat_match
 
-        # For soil and tvws
         cat_match = category in filename
+
+        if instance_id is None:
+            print(
+                f"[DEBUG] Matching file '{filename}': cat_match={cat_match}, instance_id=None (skipping instance check)")
+            return cat_match
+
         instance_pattern = re.compile(rf"_{re.escape(str(instance_id))}(?:_|\.|-)?")
         instance_match = bool(instance_pattern.search(filename))
 
-        # print(f"[DEBUG] Matching file '{filename}': cat_match={cat_match}, instance_match={instance_match}")
+        print(f"[DEBUG] Matching file '{filename}': cat_match={cat_match}, instance_match={instance_match}")
         return cat_match and instance_match
 
     def _extract_metadata(self, file_path: str) -> dict:

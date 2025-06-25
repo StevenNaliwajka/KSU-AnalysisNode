@@ -36,7 +36,7 @@ shared_links = html.Div([
 shared_links = html.Div([
     html.Div([
         dcc.Link("🔍 Inspect SDR Files", href="/inspect-sdr", className="dropdown-link"),
-        dcc.Link("📈 Plot a Value Over Time", href="/SimplePlot/plot-value", className="dropdown-link"),
+        dcc.Link("📈 Plot a Value Over Time", href="/plot-value", className="dropdown-link"),
         dcc.Link("📊 See Variance of Value", href="/see-variance", className="dropdown-link"),
         dcc.Link("🤖 Train Machine Learning Model", href="/train-ml", className="dropdown-link"),
     ], className="dropdown-nav")

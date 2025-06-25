@@ -1,10 +1,12 @@
 from dash import Input, Output, State, dcc
 from dash.exceptions import PreventUpdate
 from Codebase.Dashboard.Pages.SimplePlot.Formating.format_timeseries_figure import format_timeseries_figure
+from Codebase.Dashboard.SupportMethods.parse_special_value import parse_special_value
 from Codebase.DataManager.data_loader import DataLoader
 import pandas as pd
 
 def register_plot_figure_callback(app):
+
     @app.callback(
         Output("plot-container", "children"),
         Input("dropdown-1", "value"),
@@ -52,11 +54,19 @@ def register_plot_figure_callback(app):
             print("[DEBUG] Loader restored successfully")
 
             if y1_type and y1_col:
-                loader.load_data(csv_category=y1_type, instance_id=y1_special, set_of_columns={y1_col})
+                instance_id, special_key = parse_special_value(y1_special)
+                loader.load_data(csv_category=y1_type, instance_id=instance_id, set_of_columns={y1_col})
+
             if y2_type and y2_col:
-                loader.load_data(csv_category=y2_type, instance_id=y2_special, set_of_columns={y2_col})
+                instance_id, special_key = parse_special_value(y2_special)
+                loader.load_data(csv_category=y2_type, instance_id=instance_id, set_of_columns={y2_col})
+
             if y3_type and y3_col:
-                loader.load_data(csv_category=y3_type, instance_id=y3_special, set_of_columns={y3_col})
+                instance_id, special_key = parse_special_value(y3_special)
+                loader.load_data(csv_category=y3_type, instance_id=instance_id, set_of_columns={y3_col})
+
+            print(f"[DEBUG] loader.data keys after load: {loader.data.keys()}")
+            print(f"[DEBUG] loader.data[{y1_type}] = {loader.data.get(y1_type)}")
 
         except Exception as e:
             print(f"[ERROR] Loader restoration failed: {e}")
@@ -70,11 +80,13 @@ def register_plot_figure_callback(app):
 
             frames = []
             for instance_id, instance in loader.data[data_type].items():
+                # Priority 1: exact match on special key
                 if special and special in instance:
                     for df in instance[special]["data"]:
                         if col in df.columns:
                             frames.append(df[["datetime", col]])
-                elif not special:
+                else:
+                    # Fallback: use all subkeys (like "unknown")
                     for subkey, subdict in instance.items():
                         for df in subdict["data"]:
                             if col in df.columns:

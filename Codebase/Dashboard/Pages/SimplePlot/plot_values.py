@@ -3,7 +3,6 @@ from dash import html, dcc
 
 from Codebase.Dashboard.Pages.SimplePlot.Formating.get_plot_label_inputs import get_plot_label_inputs
 from Codebase.Dashboard.Pages.SimplePlot.Formating.row_layout import row_layout
-from Codebase.Dashboard.Pages.SimplePlot.Formating.format_timeseries_figure import format_timeseries_figure
 
 # Register the page in the multi-page Dash app
 dash.register_page(__name__, path="/plot-value", name="Plot Value")
