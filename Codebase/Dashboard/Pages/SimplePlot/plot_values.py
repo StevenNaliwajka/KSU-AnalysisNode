@@ -1,6 +1,8 @@
 import dash
 from dash import html, dcc
 
+from Codebase.Dashboard.Pages.SimplePlot.Formating.get_plot_controls_with_grouping import \
+    get_plot_controls_with_grouping
 from Codebase.Dashboard.Pages.SimplePlot.Formating.get_plot_label_inputs import get_plot_label_inputs
 from Codebase.Dashboard.Pages.SimplePlot.Formating.row_layout import row_layout
 
@@ -17,7 +19,7 @@ layout = html.Div([
     row_layout("row2", "dropdown-2", "dropdown-special-2", "conditional-2", "Select Y2 Axis"),
     row_layout("row3", "dropdown-3", "dropdown-special-3", "conditional-3", "Select Y3 Axis"),
 
-    get_plot_label_inputs(),  # <- NEW: editable labels
+    get_plot_controls_with_grouping(),  # <- NEW: editable labels
 
     html.Div(id="plot-container"),
 ])

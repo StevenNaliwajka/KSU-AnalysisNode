@@ -16,7 +16,7 @@ def build_timeseries_df(loader, selected_settings: list):
         for df in loader.data.get(dtype, {}).get(special, {}).get("data", []):
             if col in df.columns:
                 temp = df[["datetime", col]].copy()
-                temp = temp.rename(columns={col: f"{dtype}::{col}"})
+                temp = temp.rename(columns={col: f"{dtype}::{col}::{special}"})
                 dfs.append(temp)
 
     if not dfs:

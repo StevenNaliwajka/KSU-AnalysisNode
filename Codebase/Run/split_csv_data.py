@@ -25,10 +25,14 @@ def parse_datetime_column(df, folder):
     if folder == "Atmospheric":
         df["datetime"] = pd.to_datetime(df[0], utc=True, errors="coerce")
     elif folder in {"Soil", "TVWS"}:
-        df["datetime"] = pd.to_datetime(df[0].astype(str) + " " + df[1].astype(str), format="%Y-%m-%d %H-%M-%S", utc=True, errors="coerce")
+        # Fix time format to use ":" for parsing
+        time_str = df[1].astype(str).str.replace("-", ":", regex=False)
+        combined = df[0].astype(str) + " " + time_str
+        df["datetime"] = pd.to_datetime(combined, format="%Y-%m-%d %H:%M:%S", utc=True, errors="coerce")
     else:
         df["datetime"] = pd.to_datetime(df[0], utc=True, errors="coerce")
     return df.dropna(subset=["datetime"])
+
 
 def split_by_time(df, train_cutoff):
     df_train = df[df["datetime"] < train_cutoff].copy()
