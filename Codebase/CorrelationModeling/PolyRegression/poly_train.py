@@ -6,7 +6,7 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-def train_model(df: pd.DataFrame, input_cols: list, output_col: str, degree: int = 2):
+def poly_train(df: pd.DataFrame, input_cols: list, output_col: str, degree: int = 2):
     X = df[input_cols]
     y = df[output_col]
 

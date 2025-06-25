@@ -1,5 +1,5 @@
 import pandas as pd
-
+#### WEIRD. WHEN ITS TIME TO FIX SPLIT_DATA. FIX
 def parse_datetime(df):
     cols = [col.strip().lower() for col in df.columns]
 

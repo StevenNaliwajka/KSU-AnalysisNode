@@ -8,7 +8,7 @@ from sklearn.metrics import mean_absolute_error, r2_score
 from Codebase.CorrelationModeling.model_loader import load_model
 from Codebase.DataManager.data_loader import DataLoader
 from Codebase.Pathing.get_project_root import get_project_root
-from Codebase.CorrelationModeling.data_preparer import detect_header_row, normalize_header, coalesce_columns
+from Codebase.CorrelationModeling.prepare_training_data import detect_header_row, normalize_header, coalesce_columns
 
 print("=== [Predict with Trained ML Model] ===\n")
 

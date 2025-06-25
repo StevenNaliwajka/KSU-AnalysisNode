@@ -1,58 +1,11 @@
-import datetime
-
 import pandas as pd
 import logging
 from collections import defaultdict
 
-def normalize_header(header):
-    return header.strip().lower().replace('"', '').replace('’', "'")
+from Codebase.DataManager.Processing.DataMGMT.coalesce_columns import coalesce_columns
+from Codebase.DataManager.Processing.Header.normalize_header import normalize_header
+from Codebase.DataManager.Processing.detect_header_row import detect_header_row
 
-def coalesce_columns(df):
-    """
-    Merge columns like 'drssi_x', 'drssi_y' into a single 'drssi',
-    and drop the original suffixed columns.
-    """
-    from collections import defaultdict
-    import re
-
-    # Group columns by base name (without _x, _y, _z...)
-    col_groups = defaultdict(list)
-    for col in df.columns:
-        match = re.match(r"^(.*?)(?:_[xyz])?$", col)
-        if match:
-            base = match.group(1)
-            col_groups[base].append(col)
-
-    for base_col, variants in col_groups.items():
-        if len(variants) > 1:
-            # Coalesce into one column
-            df[base_col] = df[variants].bfill(axis=1).iloc[:, 0]
-            df.drop(columns=[v for v in variants if v != base_col], inplace=True)
-
-    return df
-
-
-def detect_header_row(filepath, max_scan_lines=10):
-    # print(f"[DEBUG] Starting header detection for file: {filepath}")
-    with open(filepath, 'r', encoding='utf-8') as f:
-        for i in range(max_scan_lines):
-            line = f.readline()
-            if not line:
-                break
-            # print(f"[DEBUG] Line {i}: {line.strip()}")
-            cols = [c.strip().replace('"', '') for c in line.strip().split(',')]
-            lower = [normalize_header(c) for c in cols]
-            if any("date" in col for col in lower) and (
-                any("time" in col for col in lower)
-                or any(any(keyword in col for keyword in ("soil", "moisture", "temperature")) for col in lower)
-            ):
-                # print(f"[DEBUG] Header detected at line {i}: {cols}")
-                return i, cols
-    with open(filepath, 'r', encoding='utf-8') as f:
-        first = f.readline().strip().split(',')
-    first_clean = [c.strip().replace('"', '') for c in first]
-    # print(f"[DEBUG] No header match; fallback to first line: {first_clean}")
-    return 0, first_clean
 
 def prepare_training_data(train_dir, loader, selected_headers, merge_tolerance, allowed_files=None):
     selected = [normalize_header(h) for h in selected_headers]

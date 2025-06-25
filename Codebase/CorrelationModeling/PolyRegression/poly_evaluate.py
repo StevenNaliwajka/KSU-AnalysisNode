@@ -3,7 +3,7 @@
 import pandas as pd
 from Codebase.CorrelationModeling.metrics import compute_metrics
 
-def predict_and_evaluate(model, df: pd.DataFrame, input_cols: list, output_col: str = None):
+def poly_evaluate(model, df: pd.DataFrame, input_cols: list, output_col: str = None):
     X = df[input_cols]
     y_pred = model.predict(X)
 

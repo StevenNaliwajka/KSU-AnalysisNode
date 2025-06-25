@@ -53,7 +53,7 @@ class DataLoader:
 
                     self.data[csv_category][key]["data"].append(data_df)
 
-                    print(f"[INFO] Loaded: {file} | Columns: {list(data_df.columns)}")
+                    # print(f"[INFO] Loaded: {file} | Columns: {list(data_df.columns)}")
 
                 except Exception as e:
                     print(f"[ERROR] Skipping {file} due to error: {e}")

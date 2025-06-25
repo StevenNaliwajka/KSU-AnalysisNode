@@ -14,19 +14,6 @@ HEADER_LINE_MAP = {
     "TVWS": 2
 }
 
-def load_blacklist():
-    """Load blacklisted column names from a file."""
-    blacklist = set()
-    if BLACKLIST_PATH.exists():
-        with open(BLACKLIST_PATH, "r", encoding="utf-8") as f:
-            for line in f:
-                entry = line.strip().lower()
-                if entry:
-                    blacklist.add(entry)
-    else:
-        print(f"[WARN] Blacklist file not found: {BLACKLIST_PATH}")
-    return blacklist
-
 def scan_first_valid_csv(folder: Path, skip_rows: int):
     """Scan the first valid CSV file in the folder and return cleaned header columns."""
     for root, _, files in os.walk(folder):

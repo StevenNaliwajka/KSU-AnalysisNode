@@ -6,7 +6,7 @@ from pathlib import Path
 from sklearn.utils import shuffle
 
 from Codebase.CorrelationModeling.header_scanner import scan_unique_headers
-from Codebase.CorrelationModeling.data_preparer import prepare_training_data
+from Codebase.CorrelationModeling.prepare_training_data import prepare_training_data
 from Codebase.CorrelationModeling.PolyRegression.poly_train import train_model
 from Codebase.CorrelationModeling.model_loader import save_model
 from Codebase.DataManager.data_loader import DataLoader

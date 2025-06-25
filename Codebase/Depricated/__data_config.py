@@ -21,7 +21,7 @@ type_map = {
     "soil": ("Soil", 2),
     "tvws": ("TVWS", 2),
     "sdr": ("SDR", 2),
-    "atmospheric": ("Atmospheric", 0),
+    "ambient": ("Atmospheric", 0),
 }
 
 available_columns_by_type = defaultdict(set)
@@ -57,7 +57,7 @@ for file_path in csv_files:
     for key, (data_type, skip_rows) in type_map.items():
         if key in filename:
             try:
-                df = loader.read_csv(file_path, skip_rows=skip_rows)
+                df = loader.read_csv(file_path, header_line=skip_rows)
                 if df is not None:
                     loader.add_to_data(data_type, str(file_path), df)
             except Exception as e:

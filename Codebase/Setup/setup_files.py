@@ -26,7 +26,7 @@ def setup_files():
 
     # Create Data folder paths
     data_folder = data_path
-    predict_atm = data_folder/"Predict"/"Atmospheric"
+    predict_atm = data_folder/"Predict"/"Ambient"
     predict_atm.mkdir(parents=True, exist_ok=True)
     predict_sdr = data_folder/"Predict"/"SDR"
     predict_sdr.mkdir(parents=True, exist_ok=True)
@@ -34,7 +34,7 @@ def setup_files():
     predict_soil.mkdir(parents=True, exist_ok=True)
     predict_tvws = data_folder/"Predict"/"TVWS"
     predict_tvws.mkdir(parents=True, exist_ok=True)
-    train_atm = data_folder/"Train"/"Atmospheric"
+    train_atm = data_folder/"Train"/"Ambient"
     train_atm.mkdir(parents=True, exist_ok=True)
     train_sdr = data_folder/"Train"/"SDR"
     train_sdr.mkdir(parents=True, exist_ok=True)
