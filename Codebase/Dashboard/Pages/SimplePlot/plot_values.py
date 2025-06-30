@@ -3,7 +3,6 @@ from dash import html, dcc
 
 from Codebase.Dashboard.Pages.SimplePlot.Formating.get_plot_controls_with_grouping import \
     get_plot_controls_with_grouping
-from Codebase.Dashboard.Pages.SimplePlot.Formating.get_plot_label_inputs import get_plot_label_inputs
 from Codebase.Dashboard.Pages.SimplePlot.Formating.row_layout import row_layout
 
 # Register the page in the multi-page Dash app
@@ -15,11 +14,62 @@ layout = html.Div([
 
     html.H2("📈 Plot a Value Over Time", style={"textAlign": "center", "marginBottom": "30px"}),
 
-    row_layout("row1", "dropdown-1", "dropdown-special-1", "conditional-1", "Select Y1 Axis"),
-    row_layout("row2", "dropdown-2", "dropdown-special-2", "conditional-2", "Select Y2 Axis"),
-    row_layout("row3", "dropdown-3", "dropdown-special-3", "conditional-3", "Select Y3 Axis"),
+    html.Div([
+        # Row 1: Y1
+        row_layout(
+            row_id="y1-row",
+            dropdown_id="dropdown-1",
+            special_id="dropdown-special-1",
+            conditional_id="conditional-1",
+            placeholder="Select Data Source",
+            time_grouping_id="time-grouping-y1",
+            outlier_filter_id="outlier-filter-y1",
+            extra_transform_id="extra-transform-y1"
+        ),
+        # Row 2: Y2
+        row_layout(
+            row_id="y2-row",
+            dropdown_id="dropdown-2",
+            special_id="dropdown-special-2",
+            conditional_id="conditional-2",
+            placeholder="Select Data Source",
+            time_grouping_id="time-grouping-y2",
+            outlier_filter_id="outlier-filter-y2",
+            extra_transform_id="extra-transform-y2"
+        ),
+        # Row 3: Y3
+        row_layout(
+            row_id="y3-row",
+            dropdown_id="dropdown-3",
+            special_id="dropdown-special-3",
+            conditional_id="conditional-3",
+            placeholder="Select Data Source",
+            time_grouping_id="time-grouping-y3",
+            outlier_filter_id="outlier-filter-y3",
+            extra_transform_id="extra-transform-y3"
+        ),
 
-    get_plot_controls_with_grouping(),  # <- NEW: editable labels
+        # ✅ LCD Sync Button
+        html.Div([
+            html.Button(
+                "Auto-Sync Time Grouping to LCD",
+                id="lcd-sync-button",
+                n_clicks=0,
+                style={
+                    "marginTop": "15px",
+                    "backgroundColor": "#007bff",
+                    "color": "white",
+                    "border": "none",
+                    "padding": "10px 20px",
+                    "borderRadius": "6px",
+                    "cursor": "pointer",
+                    "fontWeight": "bold"
+                }
+            )
+        ], style={"textAlign": "center"})
+    ]),
+
+    get_plot_controls_with_grouping(),
 
     html.Div(id="plot-container"),
 ])

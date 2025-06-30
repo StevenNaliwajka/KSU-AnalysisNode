@@ -8,11 +8,14 @@ from Codebase.Dashboard.Pages.SimplePlot.Callbacks.populate_inital_dropdowns imp
 from Codebase.Dashboard.Pages.SimplePlot.Callbacks.register_plot_figure_callback import register_plot_figure_callback
 from Codebase.Dashboard.Pages.SimplePlot.Callbacks.register_plot_init_loader import register_plot_init_loader
 from Codebase.Dashboard.Pages.SimplePlot.Callbacks.make_special_dropdown import make_special_dropdown
+from Codebase.Dashboard.Pages.SimplePlot.Callbacks.register_sync_date_range import register_sync_date_range
 from Codebase.DataManager.data_loader import DataLoader
 
 def register_plot_callbacks(app):
     register_plot_init_loader(app)
     populate_inital_dropdowns(app)
+    register_sync_date_range(app)
+
 
     ensure_data_is_loaded(app, "dropdown-1")
     ensure_data_is_loaded(app, "dropdown-2")

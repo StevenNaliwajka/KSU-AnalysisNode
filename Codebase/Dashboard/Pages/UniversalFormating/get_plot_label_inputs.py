@@ -33,5 +33,16 @@ def get_plot_label_inputs():
                 debounce=True,
                 style={"width": "100%"}
             )
+        ], style={"margin-bottom": "1rem"}),
+
+        html.Div([
+            html.Label("Y3 Axis Label", htmlFor="y3-axis-input"),
+            dcc.Input(
+                id="y3-axis-input",
+                type="text",
+                value="Y3 Axis",
+                debounce=True,
+                style={"width": "100%"}
+            )
         ])
     ], style={"padding": "1rem", "border": "1px solid #ccc", "borderRadius": "10px"})
