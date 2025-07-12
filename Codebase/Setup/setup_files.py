@@ -1,14 +1,14 @@
 import os
 import sys
 
-from Codebase.Pathing.get_ml_bin_folder import get_ml_bin_folder
-
-# Add project root to path
+# Add project root to path BEFORE any Codebase import
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, "..", ".."))
-sys.path.append(PROJECT_ROOT)
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
-# Now your imports
+# Now safe to import project files
+from Codebase.Pathing.get_ml_bin_folder import get_ml_bin_folder
 from Codebase.Pathing.get_data_folder import get_data_folder
 from Codebase.Pathing.get_raw_photos import get_raw_photos
 
@@ -26,22 +26,15 @@ def setup_files():
 
     # Create Data folder paths
     data_folder = data_path
-    predict_atm = data_folder/"Predict"/"Ambient"
-    predict_atm.mkdir(parents=True, exist_ok=True)
-    predict_sdr = data_folder/"Predict"/"SDR"
-    predict_sdr.mkdir(parents=True, exist_ok=True)
-    predict_soil = data_folder/"Predict"/"Soil"
-    predict_soil.mkdir(parents=True, exist_ok=True)
-    predict_tvws = data_folder/"Predict"/"TVWS"
-    predict_tvws.mkdir(parents=True, exist_ok=True)
-    train_atm = data_folder/"Train"/"Ambient"
-    train_atm.mkdir(parents=True, exist_ok=True)
-    train_sdr = data_folder/"Train"/"SDR"
-    train_sdr.mkdir(parents=True, exist_ok=True)
-    train_soil = data_folder/"Train"/"Soil"
-    train_soil.mkdir(parents=True, exist_ok=True)
-    train_tvws = data_folder/"Train"/"TVWS"
-    train_tvws.mkdir(parents=True, exist_ok=True)
+    (data_folder / "Predict" / "Ambient").mkdir(parents=True, exist_ok=True)
+    (data_folder / "Predict" / "SDR").mkdir(parents=True, exist_ok=True)
+    (data_folder / "Predict" / "Soil").mkdir(parents=True, exist_ok=True)
+    (data_folder / "Predict" / "TVWS").mkdir(parents=True, exist_ok=True)
+    (data_folder / "Train" / "Ambient").mkdir(parents=True, exist_ok=True)
+    (data_folder / "Train" / "SDR").mkdir(parents=True, exist_ok=True)
+    (data_folder / "Train" / "Soil").mkdir(parents=True, exist_ok=True)
+    (data_folder / "Train" / "TVWS").mkdir(parents=True, exist_ok=True)
+
 
 if __name__ == '__main__':
     setup_files()

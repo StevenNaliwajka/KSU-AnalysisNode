@@ -37,6 +37,25 @@ if (-Not (Test-Path $SETUP_VENV_SCRIPT)) {
 Write-Output "`n[INFO] Running setup_venv.ps1..."
 & "$SETUP_VENV_SCRIPT" -venv "$VENV_DIR"
 
+# Call setup_files.py from the same folder
+$SETUP_FILES_SCRIPT = Join-Path $SCRIPT_DIR "setup_files.py"
+
+if (-Not (Test-Path $SETUP_FILES_SCRIPT)) {
+    Write-Error "Missing setup_files.py at $SETUP_FILES_SCRIPT"
+    exit 1
+}
+
+Write-Output "`n[INFO] Running setup_files.py..."
+
+# Use Python from the virtual environment
+$PYTHON_EXE = Join-Path $VENV_DIR "Scripts\python.exe"
+
+# Set working directory to project root to ensure imports like 'Codebase.X' work
+Push-Location $PROJECT_ROOT
+& "$PYTHON_EXE" "$SCRIPT_DIR\setup_files.py"
+Pop-Location
+
+
 Write-Output "`n[INFO] Setup complete."
 Write-Output "[INFO] Configure your files in /Config/*"
 Write-Output "[INFO] To run the program:"
