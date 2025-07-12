@@ -1,11 +1,14 @@
 # setup_windows.ps1
 
-# Get the root of the project (where this script lives)
-$PROJECT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
+# Get the directory where this script lives
+$SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Definition
+
+# Go two levels up to project root (from Codebase/Setup/)
+$PROJECT_ROOT = Resolve-Path "$SCRIPT_DIR\..\.."
 $env:PROJECT_ROOT = $PROJECT_ROOT
 
-# Ensure Data folder exists
-$DATA_DIR = "$PROJECT_ROOT\Data"
+# Ensure Data directory exists at project root
+$DATA_DIR = Join-Path $PROJECT_ROOT "Data"
 if (-Not (Test-Path $DATA_DIR)) {
     Write-Output "[INFO] Creating missing Data directory at $DATA_DIR"
     New-Item -ItemType Directory -Path $DATA_DIR | Out-Null
@@ -22,18 +25,20 @@ if (-Not $python) {
 }
 Write-Output "[INFO] Python is available."
 
-# Call setup_venv.ps1
-$SETUP_VENV_SCRIPT = "$PROJECT_ROOT\Codebase\Setup\setup_venv.ps1"
+# Call setup_venv.ps1 from same folder
+$SETUP_VENV_SCRIPT = Join-Path $SCRIPT_DIR "setup_venv.ps1"
+$VENV_DIR = Join-Path $PROJECT_ROOT ".venv"
+
 if (-Not (Test-Path $SETUP_VENV_SCRIPT)) {
     Write-Error "Missing setup_venv.ps1 at $SETUP_VENV_SCRIPT"
     exit 1
 }
 
 Write-Output "`n[INFO] Running setup_venv.ps1..."
-& "$SETUP_VENV_SCRIPT" -venv "$PROJECT_ROOT\venv"
+& "$SETUP_VENV_SCRIPT" -venv "$VENV_DIR"
 
 Write-Output "`n[INFO] Setup complete."
 Write-Output "[INFO] Configure your files in /Config/*"
 Write-Output "[INFO] To run the program:"
-Write-Output "    $PROJECT_ROOT\venv\Scripts\activate"
+Write-Output "    $VENV_DIR\Scripts\activate"
 Write-Output "    python run.py"
