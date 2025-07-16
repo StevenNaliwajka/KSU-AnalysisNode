@@ -15,6 +15,7 @@ from Codebase.SDRAnalysis.Plot.plot_correlation import plot_correlation
 from Codebase.SDRAnalysis.Plot.plot_amplitude_vs_frequency import plot_amplitude_vs_frequency
 from Codebase.SDRAnalysis.Plot.plot_3d_spectrogram import plot_3d_spectrogram
 from Codebase.SDRAnalysis.Plot.plot_amplitude_over_time import plot_amplitude_over_time
+from Codebase.SDRAnalysis.iq_phase_extractor import main as extract_phases_main
 
 
 def main():
@@ -73,6 +74,10 @@ def main():
                 bandwidth_hz=200_000,
                 header_duration_ms=2.0
             )
+        },
+        "9": {
+            "name": "Extract Minute-Averaged Phase Shift from All IQ Files",
+            "func": lambda: extract_phases_main()
         }
     }
 

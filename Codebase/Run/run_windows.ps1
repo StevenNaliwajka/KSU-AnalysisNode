@@ -27,12 +27,13 @@ while ($true) {
     Write-Host ""
     Write-Host "[ Available Operations ]"
     Write-Host "  1. Run analysis dashboard"
-    Write-Host "  2. Run SDR Analysis"
+    Write-Host "  2. Run SDR Analysis UI"
+    Write-Host "  3. Extract Phase Shift from IQ Files"
     Write-Host ""
-    Write-Host "  3. Exit"
+    Write-Host "  4. Exit"
     Write-Host "============================"
 
-    $choice = Read-Host "Select an option [1-3]"
+    $choice = Read-Host "Select an option [1-4]"
 
     switch ($choice) {
         "1" {
@@ -42,11 +43,14 @@ while ($true) {
             python -m SDRAnalysis.main
         }
         "3" {
+            python "$PROJECT_ROOT\Codebase\SDRAnalysis\iq_phase_extractor.py"
+        }
+        "4" {
             Write-Host "Exiting."
             break
         }
         Default {
-            Write-Host "Invalid option. Please choose 1, 2, or 3."
+            Write-Host "Invalid option. Please choose 1, 2, 3, or 4."
         }
     }
 }

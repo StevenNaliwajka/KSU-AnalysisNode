@@ -28,12 +28,14 @@ def setup_files():
     data_folder = data_path
     (data_folder / "Predict" / "Ambient").mkdir(parents=True, exist_ok=True)
     (data_folder / "Predict" / "SDR").mkdir(parents=True, exist_ok=True)
+    (data_folder / "Predict" / "SDR" / "CSV").mkdir(parents=True, exist_ok=True)
     (data_folder / "Predict" / "Soil").mkdir(parents=True, exist_ok=True)
     (data_folder / "Predict" / "TVWS").mkdir(parents=True, exist_ok=True)
     (data_folder / "Train" / "Ambient").mkdir(parents=True, exist_ok=True)
     (data_folder / "Train" / "SDR").mkdir(parents=True, exist_ok=True)
     (data_folder / "Train" / "Soil").mkdir(parents=True, exist_ok=True)
     (data_folder / "Train" / "TVWS").mkdir(parents=True, exist_ok=True)
+    (data_folder / "Train" / "SDR" / "CSV").mkdir(parents=True, exist_ok=True)
 
 
 if __name__ == '__main__':
