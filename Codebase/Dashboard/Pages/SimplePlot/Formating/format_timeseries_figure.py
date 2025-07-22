@@ -15,32 +15,38 @@ def format_timeseries_figure(
 ):
     fig = go.Figure()
 
-    def build_legend_label(label, role):
-        if grouping_info and role in grouping_info:
-            base = grouping_info[role].get("base", "—")
-            blocked = grouping_info[role].get("blocked", "—")
-            return f"{label} (Collected every {base}, Averaged to {blocked})"
-        return label
+    # def build_legend_label(label, role):
+    #     if grouping_info and role in grouping_info:
+    #         base = grouping_info[role].get("base", "—")
+    #         blocked = grouping_info[role].get("blocked", "—")
+    #         return f"{label} (Collected every {base}, Averaged to {blocked})"
+    #     return label
+
+    def plain_label(label):
+        return label  # stripped label (no blocking text)
 
     if y1_col and y1_col in df.columns:
         fig.add_trace(go.Scatter(
             x=df[x_col], y=df[y1_col],
-            name=build_legend_label(y1_label, "y1"),
-            yaxis="y1", mode="markers"
+            name=plain_label(y1_label),  # can also just pass name="" to hide
+            yaxis="y1", mode="markers",
+            showlegend=False  # hides legend entry
         ))
 
     if y2_col and y2_col in df.columns:
         fig.add_trace(go.Scatter(
             x=df[x_col], y=df[y2_col],
-            name=build_legend_label(y2_label, "y2"),
-            yaxis="y2", mode="markers"
+            name=plain_label(y2_label),
+            yaxis="y2", mode="markers",
+            showlegend=False
         ))
 
     if y3_col and y3_col in df.columns:
         fig.add_trace(go.Scatter(
             x=df[x_col], y=df[y3_col],
-            name=build_legend_label(y3_label, "y3"),
-            yaxis="y3", mode="markers"
+            name=plain_label(y3_label),
+            yaxis="y3", mode="markers",
+            showlegend=False
         ))
 
     def get_range_for_axis(role):
@@ -50,12 +56,12 @@ def format_timeseries_figure(
         return None
 
     layout = dict(
-        title=dict(
-            text=plot_title,
-            x=0.5,
-            xanchor="center",
-            font=dict(size=32)
-        ),
+        # title=dict(
+        #     text=plot_title,
+        #     x=0.5,
+        #     xanchor="center",
+        #     font=dict(size=32)
+        # ),
         xaxis=dict(
             title=dict(text="Time", font=dict(size=24)),
             tickfont=dict(size=24)
@@ -66,12 +72,12 @@ def format_timeseries_figure(
             side="left",
             range=get_range_for_axis("y1")
         ),
-        legend=dict(
-            x=0,
-            y=1.1,
-            orientation="h",
-            font=dict(size=20)
-        ),
+        # legend=dict(
+        #     x=0,
+        #     y=1.1,
+        #     orientation="h",
+        #     font=dict(size=20)
+        # ),
         font=dict(size=24),
         margin=dict(t=100, b=80, l=80, r=140),
         height=600,
@@ -94,7 +100,7 @@ def format_timeseries_figure(
             side="right",
             overlaying="y",
             anchor="free",
-            position=.96,  # ⬅️ Move it slightly to the right of y2
+            position=.96,
             range=get_range_for_axis("y3")
         )
 

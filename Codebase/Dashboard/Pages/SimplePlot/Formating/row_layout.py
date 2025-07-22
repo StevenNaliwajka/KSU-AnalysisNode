@@ -50,6 +50,8 @@ def row_layout(
                     {"label": "1 Minute", "value": "1min"},
                     {"label": "5 Minutes", "value": "5min"},
                     {"label": "15 Minutes", "value": "15min"},
+                    {"label": "30 Minutes", "value": "30min"},
+                    {"label": "45 Minutes", "value": "45min"},
                     {"label": "1 Hour", "value": "1H"},
                 ],
                 placeholder="Group By",

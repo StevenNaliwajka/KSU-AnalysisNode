@@ -1,6 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
+<<<<<<< HEAD
 REM === Determine paths ===
 pushd %~dp0
 set "PROJECT_ROOT=%CD%"
@@ -8,6 +9,14 @@ popd
 
 REM Add Codebase to PYTHONPATH
 set "PYTHONPATH=%PROJECT_ROOT%\Codebase;%PYTHONPATH%"
+=======
+:: Get path to this .bat file
+set "PROJECT_ROOT=%~dp0"
+set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
+
+:: Now go deeper into Codebase\Setup
+powershell -ExecutionPolicy Bypass -File "%PROJECT_ROOT%\Codebase\Setup\setup_windows.ps1"
+>>>>>>> b21a4621b521d932bccd7393b4c6e562e73a3bda
 
 REM Debug info
 echo [INFO] PROJECT_ROOT is %PROJECT_ROOT%
