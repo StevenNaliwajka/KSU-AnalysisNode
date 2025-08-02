@@ -26,6 +26,7 @@ if [ -f "$CONFIG_PATH" ]; then
     current_nas_type=$(read_json_value "nas_type")
     current_nas_user=$(read_json_value "nas_user")
     current_nas_pass=$(read_json_value "nas_pass")
+    current_nas_version=$(read_json_value "nas_version")
     current_reboot=$(read_json_value "reboot_at_midnight")
 else
     current_ip="localhost"
@@ -35,6 +36,7 @@ else
     current_nas_type="cifs"
     current_nas_user=""
     current_nas_pass=""
+    current_nas_version="1.0"
     current_reboot="no"
 fi
 
@@ -59,8 +61,9 @@ nas_path=""
 nas_type=""
 nas_user=""
 nas_pass=""
+nas_version=""
 if [[ "$use_nas" =~ ^[Yy]([Ee][Ss])?$ ]]; then
-    read -p "Enter NAS path (e.g., 192.168.1.100:/share) [$current_nas_path]: " nas_path
+    read -p "Enter NAS path (e.g., //192.168.1.100/share) [$current_nas_path]: " nas_path
     nas_path=${nas_path:-$current_nas_path}
     read -p "NAS type? (cifs/nfs) [$current_nas_type]: " nas_type
     nas_type=${nas_type:-$current_nas_type}
@@ -70,6 +73,8 @@ if [[ "$use_nas" =~ ^[Yy]([Ee][Ss])?$ ]]; then
         read -s -p "NAS password (will be stored securely) [hidden]: " nas_pass
         echo
         nas_pass=${nas_pass:-$current_nas_pass}
+        read -p "NAS SMB version (e.g., 1.0, 2.0, 3.0) [$current_nas_version]: " nas_version
+        nas_version=${nas_version:-$current_nas_version}
     fi
 else
     use_nas="no"
@@ -89,6 +94,7 @@ cat <<EOF > "$CONFIG_PATH"
     "nas_type": "$nas_type",
     "nas_user": "$nas_user",
     "nas_pass": "$nas_pass",
+    "nas_version": "$nas_version",
     "reboot_at_midnight": "$reboot_at_midnight"
 }
 EOF
