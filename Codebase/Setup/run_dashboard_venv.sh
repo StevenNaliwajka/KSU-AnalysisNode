@@ -4,8 +4,8 @@
 # Exit on error
 set -e
 
-# Define project root (where this script lives)
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Define project root (go 2 levels up from this script: Setup → Codebase → Project root)
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # Virtual environment path
 VENV_PATH="$PROJECT_ROOT/.venv"
