@@ -14,7 +14,7 @@ VENV_PATH="$PROJECT_ROOT/.venv"
 source "$VENV_PATH/bin/activate"
 
 # Add Codebase to PYTHONPATH
-export PYTHONPATH="$PROJECT_ROOT/Codebase:$PYTHONPATH"
+export PYTHONPATH="$PROJECT_ROOT:$PYTHONPATH"
 
 # Run the dashboard
 exec python "$PROJECT_ROOT/Codebase/Run/run_dashboard.py"
