@@ -97,21 +97,26 @@ Requires=$([ "$USE_NAS" == "yes" ] && echo "$NAS_SERVICE")
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 $RUN_SCRIPT
-WorkingDirectory=$PROJECT_ROOT/Codebase/Run
+WorkingDirectory=$PROJECT_ROOT/Codebase
+ExecStart=$PROJECT_ROOT/run_dashboard_venv.sh
+Environment=PYTHONUNBUFFERED=1
 Restart=always
 User=$USER
-Environment=PYTHONUNBUFFERED=1
+StandardOutput=append:/var/log/dashboard.log
+StandardError=append:/var/log/dashboard.log
 
 [Install]
 WantedBy=multi-user.target
 EOL
+    sudo touch /var/log/dashboard.log
+    sudo chown $USER:$USER /var/log/dashboard.log
     sudo systemctl enable $DASHBOARD_SERVICE
     sudo systemctl start $DASHBOARD_SERVICE
     echo "[INFO] Dashboard service enabled & started."
 else
     cleanup_service "$DASHBOARD_SERVICE"
 fi
+
 
 # --- Create or cleanup midnight reboot service/timer ---
 if [ "$REBOOT_MIDNIGHT" == "yes" ]; then
