@@ -11,6 +11,9 @@ if PROJECT_ROOT not in sys.path:
 from dash import Dash, dcc, html
 import dash
 import json
+from Codebase.Dashboard.Callbacks.global_callbacks import register_callbacks
+from Codebase.Dashboard.Pages.SimplePlot.Callbacks.register_plot_callbacks import register_plot_callbacks
+
 
 # Path to config (define BEFORE using it)
 CONFIG_PATH = os.path.join(PROJECT_ROOT, "Codebase", "Setup", "setup_config.json")
