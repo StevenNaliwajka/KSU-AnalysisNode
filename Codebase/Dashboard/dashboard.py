@@ -12,6 +12,8 @@ from dash import Dash, dcc, html
 import dash
 import json
 
+# Path to config (define BEFORE using it)
+CONFIG_PATH = os.path.join(PROJECT_ROOT, "Codebase", "Setup", "setup_config.json")
 
 # Load configuration (fallback to defaults)
 def load_config():
