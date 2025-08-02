@@ -2,13 +2,17 @@ from dash import Dash, dcc, html
 import dash
 import json
 import os
+import sys
 
-# Import callbacks
-from Codebase.Dashboard.Pages.SimplePlot.Callbacks.register_plot_callbacks import register_plot_callbacks
-from Codebase.Dashboard.Callbacks.global_callbacks import register_callbacks
+# Add project root to sys.path
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, "..", ".."))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
-# Path to config
-CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "Setup", "setup_config.json")
+# Now safe to import project modules
+from Codebase.Dashboard.dashboard import main
+
 
 # Load configuration (fallback to defaults)
 def load_config():
