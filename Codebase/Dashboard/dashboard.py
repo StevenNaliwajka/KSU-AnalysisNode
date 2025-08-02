@@ -1,12 +1,33 @@
-# Codebase/Dashboard/dashboard.py
-
 from dash import Dash, dcc, html
 import dash
+import json
+import os
 
-# changed to diff stuff
-# from Codebase.Dashboard.DashboardApp.data_config import loader
+# Import callbacks
 from Codebase.Dashboard.Pages.SimplePlot.Callbacks.register_plot_callbacks import register_plot_callbacks
 from Codebase.Dashboard.Callbacks.global_callbacks import register_callbacks
+
+# Path to config
+CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "Setup", "setup_config.json")
+
+# Load configuration (fallback to defaults)
+def load_config():
+    default = {"ip_address": "localhost", "port": 8050}
+    if os.path.exists(CONFIG_PATH):
+        try:
+            with open(CONFIG_PATH, "r") as f:
+                config = json.load(f)
+                # Validate
+                ip = config.get("ip_address", default["ip_address"])
+                port = config.get("port", default["port"])
+                if not isinstance(ip, str) or not isinstance(port, int):
+                    raise ValueError
+                return {"ip_address": ip, "port": port}
+        except (json.JSONDecodeError, ValueError):
+            print(f"[WARN] Invalid config at {CONFIG_PATH}, using defaults.")
+    return default
+
+config = load_config()
 
 # Initialize Dash
 app = Dash(
@@ -15,24 +36,8 @@ app = Dash(
     pages_folder="Pages",
     suppress_callback_exceptions=True
 )
-'''
-# Shared buttons for navigation (persistent across all pages)
-shared_links = html.Div([
-    html.H2("📂 Select a Function", style={"textAlign": "center"}),
 
-    
-    html.Div([
-        dcc.Link("🔍 Inspect SDR Files", href="/inspect-sdr", className="nav-link"),
-        html.Br(),
-        dcc.Link("📈 Plot a Value Over Time", href="/plot-value", className="nav-link"),
-        html.Br(),
-        dcc.Link("📊 See Variance of Value", href="/see-variance", className="nav-link"),
-        html.Br(),
-        dcc.Link("🤖 Train Machine Learning Model", href="/train-ml", className="nav-link"),
-    ], style={"textAlign": "center", "fontSize": "18px", "lineHeight": "2"})
-    
-])
-'''
+# Shared navigation links
 shared_links = html.Div([
     html.Div([
         dcc.Link("🔍 Inspect SDR Files", href="/inspect-sdr", className="dropdown-link"),
@@ -41,14 +46,8 @@ shared_links = html.Div([
         dcc.Link("🤖 Train Machine Learning Model", href="/train-ml", className="dropdown-link"),
     ], className="dropdown-nav")
 ])
-'''
+
 # Global layout
-app.layout = html.Div([
-    dcc.Location(id='url', refresh=False),
-    shared_links,
-    dash.page_container
-])
-'''
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.H2("📂 Select a Function", style={"textAlign": "center"}),
@@ -57,12 +56,16 @@ app.layout = html.Div([
 ])
 
 # Register all callbacks
-register_callbacks(app)         # for dropdown routing
-#register_plot_callbacks(app, loader)
+register_callbacks(app)
 register_plot_callbacks(app)
 
 def main():
-    app.run(debug=True)
+    print(f"[INFO] Starting Dash app on {config['ip_address']}:{config['port']}")
+    app.run(
+        debug=True,
+        host=config["ip_address"],
+        port=config["port"]
+    )
 
 if __name__ == "__main__":
     main()
