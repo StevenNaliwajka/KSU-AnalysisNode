@@ -55,10 +55,9 @@ def plot_rssi_comparison(tvws_path, calculated_csv):
     urssi_col = next((c for c in merged.columns if "urssi" in c.lower()), None)
     drssi_col = next((c for c in merged.columns if "drssi" in c.lower()), None)
 
-    # --- Filter RSSI values between 0 and -40 dBm ---
     for col in [urssi_col, drssi_col, "calculated_rssi"]:
         if col and col in merged.columns:
-            merged = merged[(merged[col] <= -40) | (merged[col] > 0)]
+            merged = merged[(merged[col] >= -120) & (merged[col] <= -40)]
 
     # --- Colors by depth ---
     colors = {

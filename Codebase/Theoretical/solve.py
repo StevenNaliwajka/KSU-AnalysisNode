@@ -20,14 +20,14 @@ def solve_rssi_from_m_t(temp, moisture_pcnt, mounted_rssi):
     C = 15.2        # Clay (%)
     f = 491e6       # Frequency (Hz)
 
-    G_r_mounted = 0     # Rx Gain (dBi)
+    G_r_mounted = 9     # Rx Gain (dBi)
     P_t_mounted = 10    # Tx Power (dBm)
     P_r_mounted = 7     # Rx Power (dBm)
 
-    G_r_buried = 0      # Rx Gain (dBi)
+    G_r_buried = 9      # Rx Gain (dBi)
     P_t_buried = 7      # Tx Power (dBm)
     P_r_buried = 7      # Rx Power (dBm)
-    d_buried = 3
+    d_buried = 3 * 0.0254
 
     k = 0.65            # Shape Factor
     rho_b = 1.08        # Bulk Density (g/cm³)
