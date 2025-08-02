@@ -1,17 +1,19 @@
-from dash import Dash, dcc, html
-import dash
-import json
 import os
 import sys
 
-# Add project root to sys.path
+# Add project root to sys.path before any Codebase imports
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, "..", ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-# Now safe to import project modules
+# Now safe to import project files
 from Codebase.Dashboard.dashboard import main
+
+# Third-party imports
+from dash import Dash, dcc, html
+import dash
+import json
 
 
 # Load configuration (fallback to defaults)
