@@ -97,17 +97,18 @@ Requires=$([ "$USE_NAS" == "yes" ] && echo "$NAS_SERVICE")
 
 [Service]
 Type=simple
-WorkingDirectory=$PROJECT_ROOT/Codebase
-ExecStart=$PROJECT_ROOT/run_dashboard_venv.sh
+WorkingDirectory=$PROJECT_ROOT
+ExecStart=/bin/bash $PROJECT_ROOT/Codebase/Setup/run_dashboard_venv.sh
 Environment=PYTHONUNBUFFERED=1
 Restart=always
-User=$USER
+User=$(logname)
 StandardOutput=append:/var/log/dashboard.log
 StandardError=append:/var/log/dashboard.log
 
 [Install]
 WantedBy=multi-user.target
 EOL
+
     sudo touch /var/log/dashboard.log
     sudo chown $USER:$USER /var/log/dashboard.log
     sudo systemctl enable $DASHBOARD_SERVICE
