@@ -1,0 +1,111 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f7f8fa;
+    margin: 0;
+    color: #24292e;
+}
+
+/* Navbar container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #d0d7de;
+    box-shadow: 0 1px 2px rgba(27,31,35,.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Align nav links horizontally */
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+/* Navbar links (default) */
+.nav-links a.dropdown-link {
+    all: unset; /* Remove all inherited Bootstrap styles */
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: none !important;
+    color: #6e7781 !important; /* light gray default */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 400 !important; /* force normal */
+    font-size: 1rem !important;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+/* Hover */
+.nav-links a.dropdown-link:hover {
+    background-color: #f6f8fa !important;
+    color: #24292e !important;
+    font-weight: 400 !important; /* ensure no bold on hover */
+}
+
+/* Press */
+.nav-links a.dropdown-link:active {
+    background-color: #eaeef2 !important;
+    color: #24292e !important;
+    font-weight: 400 !important; /* ensure no bold on press */
+    transform: scale(0.99);
+}
+
+/* Make sure no nav link is ever bold */
+#nav-links-container a.dropdown-link,
+#nav-links-container a.dropdown-link.active-link,
+#nav-links-container a.dropdown-link[aria-current="page"] {
+    font-weight: 400 !important; /* force normal everywhere */
+    text-decoration: none !important;
+    color: #6e7781 !important;
+}
+
+.nav-links a.dropdown-link.active-link:hover {
+    background-color: #e6e7e9 !important;
+    font-weight: 400 !important; /* prevent bold on hover active */
+}
+
+
+
+/* Top-left FS-Testbed Dashboard link */
+.navbar a:first-child {
+    text-decoration: none !important;
+    color: #24292e !important;
+    font-weight: 400;
+    font-size: 1.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+    display: inline-block;
+}
+
+.navbar a:first-child:hover {
+    background-color: #f6f8fa !important;
+}
+
+.navbar a:first-child:active {
+    background-color: #eaeef2 !important;
+    transform: scale(0.99);
+}
+
+/* Page Container */
+.page-content {
+    width: 100%;
+    max-width: 100%;
+    margin: 2rem auto;
+    padding: 2rem 3rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(27,31,35,.12);
+    box-sizing: border-box;
+}
+
+/* Section header */
+.page-content h2 {
+    border-bottom: 1px solid #d0d7de;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}

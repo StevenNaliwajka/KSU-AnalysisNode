@@ -1,0 +1,11 @@
+{
+    "ip_address": "localhost",
+    "port": 8050,
+    "use_nas": "no",
+    "nas_path": "",
+    "nas_type": "",
+    "nas_user": "",
+    "nas_pass": "",
+    "nas_version": "",
+    "reboot_at_midnight": "no"
+}

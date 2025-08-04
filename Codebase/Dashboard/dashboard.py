@@ -8,12 +8,12 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 # Third-party imports
-from dash import Dash, dcc, html
+from dash import Dash, dcc, html, Output, Input
 import dash
 import json
+import dash_bootstrap_components as dbc
 from Codebase.Dashboard.Callbacks.global_callbacks import register_callbacks
 from Codebase.Dashboard.Pages.SimplePlot.Callbacks.register_plot_callbacks import register_plot_callbacks
-
 
 # Path to config (define BEFORE using it)
 CONFIG_PATH = os.path.join(PROJECT_ROOT, "Codebase", "Setup", "setup_config.json")
@@ -42,26 +42,73 @@ app = Dash(
     __name__,
     use_pages=True,
     pages_folder="Pages",
+    external_stylesheets=[dbc.themes.BOOTSTRAP],
     suppress_callback_exceptions=True
 )
 
-# Shared navigation links
-shared_links = html.Div([
+# Top Navbar
+navbar = html.Div([
     html.Div([
-        dcc.Link("🔍 Inspect SDR Files", href="/inspect-sdr", className="dropdown-link"),
-        dcc.Link("📈 Plot a Value Over Time", href="/plot-value", className="dropdown-link"),
-        dcc.Link("📊 See Variance of Value", href="/see-variance", className="dropdown-link"),
-        dcc.Link("🤖 Train Machine Learning Model", href="/train-ml", className="dropdown-link"),
-    ], className="dropdown-nav")
-])
+        dcc.Link(
+            "FS-Testbed Dashboard",
+            href="/",
+            style={
+                "fontSize": "1.5rem",
+                "fontWeight": "400",
+                "color": "#000",
+                "textDecoration": "none"
+            }
+        ),
+    ]),
+    html.Div(id="nav-links-container", className="nav-links")  # <-- now dynamic
+], className="navbar")
+
+
+@app.callback(
+    Output("nav-links-container", "children"),
+    Input("url", "pathname")
+)
+def update_navbar_active(pathname):
+    # Helper to set active class based on current page
+    def nav_link(name, href):
+        classes = "dropdown-link"
+        if pathname == href:  # only add active-link if it's the exact page
+            classes += " active-link"
+        return dcc.Link(name, href=href, className=classes)
+
+    return [
+        nav_link("Data", "/data"),
+        nav_link("Overview", "/overview"),
+        nav_link("Bio", "/bio"),
+    ]
+
+
 
 # Global layout
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
-    html.H2("📂 Select a Function", style={"textAlign": "center"}),
-    shared_links,
-    dash.page_container
+    navbar,
+    html.Div([
+        html.H2(id="page-header", style={"textAlign": "center"}),  # Dynamic header
+        dash.page_container
+    ], className="page-content")
 ])
+
+# Callback to update header based on current path
+@app.callback(
+    Output("page-header", "children"),
+    Input("url", "pathname")
+)
+def update_header(pathname):
+    page_titles = {
+        "/data": "FieldStation Data Plotter",
+        "/overview": "Overview",
+        "/bio": "Bio",
+        "/": "Home"
+    }
+    return page_titles.get(pathname, "FieldStation Data Plotter")
+
+
 
 # Register all callbacks
 register_callbacks(app)

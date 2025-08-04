@@ -6,13 +6,11 @@ from Codebase.Dashboard.Pages.SimplePlot.Formating.get_plot_controls_with_groupi
 from Codebase.Dashboard.Pages.SimplePlot.Formating.row_layout import row_layout
 
 # Register the page in the multi-page Dash app
-dash.register_page(__name__, path="/plot-value", name="Plot Value")
+dash.register_page(__name__, path="/data", name="Plot Value")
 
 layout = html.Div([
     dcc.Interval(id="page-init-trigger", interval=300, n_intervals=0, max_intervals=1),
     dcc.Store(id="loader-store"),
-
-    html.H2("📈 Plot a Value Over Time", style={"textAlign": "center", "marginBottom": "30px"}),
 
     html.Div([
         # Row 1: Y1

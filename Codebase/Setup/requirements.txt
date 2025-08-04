@@ -6,3 +6,4 @@ pillow
 dash
 PyQt5
 scikit-learn
+dash-bootstrap-components

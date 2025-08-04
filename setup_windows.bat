@@ -1,74 +1,48 @@
 @echo off
 setlocal enabledelayedexpansion
+echo Starting setup...
+echo (Debug mode enabled — window will stay open)
+pause
 
-<<<<<<< HEAD
-REM === Determine paths ===
-pushd %~dp0
-set "PROJECT_ROOT=%CD%"
-popd
+:: === Resolve project root (batch file directory) ===
+set "SCRIPT_PATH=%~f0"
+for %%i in ("%SCRIPT_PATH%") do set "PROJECT_ROOT=%%~dpi"
+if "%PROJECT_ROOT:~-1%"=="\" set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
+set "LOG_FILE=%PROJECT_ROOT%\setup_windows_errors.log"
 
-REM Add Codebase to PYTHONPATH
-set "PYTHONPATH=%PROJECT_ROOT%\Codebase;%PYTHONPATH%"
-=======
-:: Get path to this .bat file
-set "PROJECT_ROOT=%~dp0"
-set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
+echo === Setup Errors (if any) at %date% %time% === > "%LOG_FILE%"
 
-:: Now go deeper into Codebase\Setup
-powershell -ExecutionPolicy Bypass -File "%PROJECT_ROOT%\Codebase\Setup\setup_windows.ps1"
->>>>>>> b21a4621b521d932bccd7393b4c6e562e73a3bda
-
-REM Debug info
-echo [INFO] PROJECT_ROOT is %PROJECT_ROOT%
-echo [INFO] PYTHONPATH is %PYTHONPATH%
-
-REM Paths to required files
-set "SETUP_VENV_PS1=%PROJECT_ROOT%\Codebase\Setup\setup_venv.ps1"
-set "SETUP_FILES_PY=%PROJECT_ROOT%\Codebase\Setup\setup_files.py"
-set "REQUIREMENTS_TXT=%PROJECT_ROOT%\Codebase\Setup\requirements.txt"
-set "VENV_PATH=%PROJECT_ROOT%\.venv"
-
-REM === Check existence ===
-if not exist "%SETUP_FILES_PY%" (
-    echo [ERROR] Missing: %SETUP_FILES_PY%
+:: Debug info
+echo [DEBUG] SCRIPT_PATH: %SCRIPT_PATH%
+echo [DEBUG] PROJECT_ROOT resolved to: %PROJECT_ROOT%
+echo [DEBUG] Looking for setup_windows.ps1 at: %PROJECT_ROOT%\Codebase\Setup\setup_windows.ps1
+if not exist "%PROJECT_ROOT%\Codebase\Setup\setup_windows.ps1" (
+    echo [FATAL] setup_windows.ps1 not found at %PROJECT_ROOT%\Codebase\Setup\setup_windows.ps1
     pause
     exit /b 1
 )
-if not exist "%SETUP_VENV_PS1%" (
-    echo [ERROR] Missing: %SETUP_VENV_PS1%
-    pause
-    exit /b 1
-)
-if not exist "%REQUIREMENTS_TXT%" (
-    echo [ERROR] Missing: %REQUIREMENTS_TXT%
-    pause
-    exit /b 1
-)
+pause
 
-REM === Run setup_files.py ===
-echo [INFO] Running setup_files.py...
-py "%SETUP_FILES_PY%"
-if errorlevel 1 (
-    echo [ERROR] setup_files.py failed.
+:: Run PowerShell script
+echo [INFO] Running setup_windows.ps1...
+"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -Command ^
+    "& { try { & '%PROJECT_ROOT%\Codebase\Setup\setup_windows.ps1' -Verbose } catch { Write-Host '--- PowerShell Error ---'; Write-Host $_.Exception.Message; Write-Host $_.ScriptStackTrace; pause; exit 1 } ; pause }"
+set "PS_ERROR=%ERRORLEVEL%"
+echo [DEBUG] PowerShell exited with code %PS_ERROR%
+if %PS_ERROR% NEQ 0 (
+    echo [FATAL] PowerShell script failed (exit code %PS_ERROR%). See %LOG_FILE%
     pause
-    exit /b 1
+    exit /b %PS_ERROR%
 )
+pause
 
-REM === Setup venv ===
-echo [INFO] Setting up virtual environment...
-powershell -ExecutionPolicy Bypass -File "%SETUP_VENV_PS1%" -venv "%VENV_PATH%"
-if errorlevel 1 (
-    echo [ERROR] setup_venv.ps1 failed.
-    pause
-    exit /b 1
-)
-
-REM === Final instructions ===
+:: === Final instructions ===
 echo ----------------------------------------------------
 echo [INFO] Setup complete.
 echo.
 echo To activate your environment:
-echo     call "%VENV_PATH%\Scripts\activate"
+echo     call "%PROJECT_ROOT%\.venv\Scripts\activate"
 echo Then run:
 echo     run_windows.bat
+
 pause
